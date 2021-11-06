@@ -7,24 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.List;
+
 
 @Entity
 @Getter
 @Setter
-public class Seat {
+public class Reservation {
 
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    private Auditorium auditorium;
+    private Spectacle spectacle;
 
-    @OneToMany(mappedBy = "seat")
-    private List<Reservation> reservations;
+    @ManyToOne
+    private Seat seat;
 
-    private int number;
-    private boolean isReserved;
+    @ManyToOne
+    private Spectator spectator;
 }
