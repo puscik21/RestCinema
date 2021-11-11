@@ -27,6 +27,10 @@ public class SeatService {
         return repository.save(seat);
     }
 
+    public void deleteSeat(Long id) {
+        repository.deleteById(id);
+    }
+
     public Seat changeReservedState(Long id, boolean isReserved) throws IllegalArgumentException {
         Seat seat = findById(id);
         if (isReserved && seat.isReserved()) {
@@ -34,9 +38,5 @@ public class SeatService {
         }
         seat.setReserved(isReserved);
         return repository.save(seat);
-    }
-
-    public void deleteSeat(Long id) {
-        repository.deleteById(id);
     }
 }
