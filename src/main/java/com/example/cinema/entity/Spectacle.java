@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -24,4 +25,6 @@ public class Spectacle {
 
     @ManyToOne
     private Movie movie;
+
+    private LocalDateTime dateTime;
 }
