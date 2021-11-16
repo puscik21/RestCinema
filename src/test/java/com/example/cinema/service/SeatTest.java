@@ -4,6 +4,7 @@ import com.example.cinema.CinemaApplication;
 import com.example.cinema.MockService;
 import com.example.cinema.entity.Seat;
 import com.example.cinema.exception.RequestException;
+import com.example.cinema.repository.AuditoriumRepository;
 import com.example.cinema.repository.SeatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,15 +26,21 @@ class SeatTest {
     @Mock
     private SeatRepository seatRepository;
 
+    @Mock
+    private AuditoriumRepository auditoriumRepository;
+
     @Autowired
     private MockService mockService;
 
     private SeatService seatService;
+    private AuditoriumService auditoriumService;
 
     @BeforeEach
     void setUp() {
         seatRepository = Mockito.mock(SeatRepository.class);
-        seatService = new SeatService(seatRepository);
+        auditoriumRepository = Mockito.mock(AuditoriumRepository.class);
+        auditoriumService = new AuditoriumService(auditoriumRepository);
+        seatService = new SeatService(seatRepository, auditoriumService);
         when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareSeat()));
     }
 
