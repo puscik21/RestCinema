@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = CinemaApplication.class)
-class SeatTest {
+class SeatServiceTest {
 
     @Mock
     private SeatRepository seatRepository;

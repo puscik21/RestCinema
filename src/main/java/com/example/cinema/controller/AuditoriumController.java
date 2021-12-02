@@ -2,23 +2,22 @@ package com.example.cinema.controller;
 
 import com.example.cinema.entity.Auditorium;
 import com.example.cinema.service.AuditoriumService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/auditorium")
+@AllArgsConstructor
 public class AuditoriumController {
 
     private final AuditoriumService service;
-
-    public AuditoriumController(AuditoriumService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public List<Auditorium> getAllAuditoriums() {
@@ -26,7 +25,7 @@ public class AuditoriumController {
     }
 
     @PostMapping
-    public Auditorium addAuditorium(@RequestBody Auditorium auditorium) {
+    public Auditorium addAuditorium(@RequestBody @Valid Auditorium auditorium) {
         return service.addAuditorium(auditorium);
     }
 }
