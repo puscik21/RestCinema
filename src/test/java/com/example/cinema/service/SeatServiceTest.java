@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +43,7 @@ class SeatServiceTest {
         auditoriumService = new AuditoriumService(auditoriumRepository);
         seatService = new SeatService(seatRepository, auditoriumService);
         when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareSeat()));
+        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.prepareSeat()));
     }
 
     @Test
@@ -69,4 +71,22 @@ class SeatServiceTest {
         when(seatRepository.findById(anyLong())).thenReturn(Optional.of(seat));
         assertThrows(RequestException.class, () -> seatService.changeReservedState(anyLong(), true));
     }
+
+    @Test
+    public void addExistingNumberInAuditoriumShouldReturnException() {
+        Seat seat = mockService.prepareSeat();
+        when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.prepareAuditoriumWithSeat()));
+        Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
+        assertEquals(String.format("Seat with number %s already exists in auditorium %s",
+                seat.getNumber(), seat.getAuditorium().getNumber()), e.getMessage());
+    }
+
+    @Test
+    public void addSeatWithoutAuditoriumNumberShouldReturnException() {
+        Seat seat = mockService.prepareSeat();
+        seat.getAuditorium().setNumber(null);
+        Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
+        assertEquals(String.format("Trying to add seat %s without providing auditorum number", seat.getNumber()), e.getMessage());
+    }
+
 }
