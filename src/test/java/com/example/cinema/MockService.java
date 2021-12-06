@@ -9,6 +9,13 @@ import java.util.List;
 @Service
 public class MockService {
 
+    public Auditorium prepareAuditoriumWithSeat() {
+        Auditorium auditorium = prepareAuditorium();
+        Seat seat = prepareSeat();
+        auditorium.setSeats(List.of(seat));
+        return auditorium;
+    }
+
     public Seat prepareSeat() {
         Seat seat = new Seat();
         seat.setAuditorium(prepareAuditorium());
