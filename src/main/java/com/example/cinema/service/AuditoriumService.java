@@ -3,17 +3,15 @@ package com.example.cinema.service;
 import com.example.cinema.entity.Auditorium;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.AuditoriumRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class AuditoriumService {
     private final AuditoriumRepository repository;
-
-    public AuditoriumService(AuditoriumRepository repository) {
-        this.repository = repository;
-    }
 
     public List<Auditorium> findAll() {
         return repository.findAll();
@@ -23,7 +21,14 @@ public class AuditoriumService {
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find auditorium with id: " + id));
     }
 
+    public Auditorium findByNumber(int number) {
+        return repository.findByNumber(number).orElseThrow(() -> new RequestException("Could not find auditorium with number: " + number));
+    }
+
     public Auditorium addAuditorium(Auditorium auditorium) {
+        if (repository.findByNumber(auditorium.getNumber()).isPresent()){
+            throw new RequestException(String.format("Auditorium with number %s already exists", auditorium.getNumber()));
+        }
         return repository.save(auditorium);
     }
 

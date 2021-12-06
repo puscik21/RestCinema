@@ -3,20 +3,17 @@ package com.example.cinema.service;
 import com.example.cinema.entity.Spectacle;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectacleRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class SpectacleService {
 
     private final SpectacleRepository repository;
     private final SeatService seatService;
-
-    public SpectacleService(SpectacleRepository spectacleRepository, SeatService seatService) {
-        this.repository = spectacleRepository;
-        this.seatService = seatService;
-    }
 
     // TODO: 11.11.2021 make it chronological
     // TODO: 11.11.2021 add pagination

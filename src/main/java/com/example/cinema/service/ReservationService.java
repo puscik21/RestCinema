@@ -3,11 +3,13 @@ package com.example.cinema.service;
 import com.example.cinema.entity.Reservation;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.ReservationRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository repository;

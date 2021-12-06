@@ -3,17 +3,15 @@ package com.example.cinema.service;
 import com.example.cinema.entity.Spectator;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectatorRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class SpectatorService {
     private final SpectatorRepository repository;
-
-    public SpectatorService(SpectatorRepository repository) {
-        this.repository = repository;
-    }
 
     public List<Spectator> findAll() {
         return repository.findAll();
