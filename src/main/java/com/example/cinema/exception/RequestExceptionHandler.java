@@ -13,8 +13,8 @@ import java.util.List;
 @ControllerAdvice
 public class RequestExceptionHandler {
 
-    @ExceptionHandler(value = RequestException.class)
-    public ResponseEntity<ExceptionResult> handleRequestException(RequestException e) {
+    @ExceptionHandler(value = {RequestException.class, Exception.class})
+    public ResponseEntity<ExceptionResult> handleRequestException(Exception e) {
         ExceptionResult result = new ExceptionResult(e.getMessage(), HttpStatus.BAD_REQUEST);
         return ResponseEntity.badRequest().body(result);
     }
