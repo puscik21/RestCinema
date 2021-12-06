@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +29,14 @@ public class Spectator {
     @JsonManagedReference(value = "spectator_reservations")
     private List<Reservation> reservations;
 
+    @NotNull(message = "Spectator name cannot be null")
     private String name;
+
+    @Column(unique = true)
+    @NotNull(message = "Spectator email cannot be null")
     private String email;
+
+    @NotNull(message = "Spectator phone number cannot be null")
     private int phoneNumber;
 
     public Spectator(String name, String email, int phoneNumber) {

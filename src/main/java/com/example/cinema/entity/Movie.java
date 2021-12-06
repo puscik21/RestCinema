@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -24,6 +25,7 @@ public class Movie {
     @JsonManagedReference(value = "movie_spectacles")
     private List<Spectacle> spectacles;
 
+    @NotNull(message = "Movie name cannot be null")
     private String name;
 }
 

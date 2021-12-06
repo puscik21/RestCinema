@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +36,10 @@ public class Seat {
     @JsonManagedReference(value = "seat_reservations")
     private List<Reservation> reservations;
 
+    @Min(value = 1, message = "Seat number must be greater then 0")
+    @NotNull(message = "Seat number cannot be null")
     private int number;
-    private boolean isReserved;
+    private boolean isReserved = false;
 
     public Seat(int number) {
         this.number = number;
