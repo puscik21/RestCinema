@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,8 +20,12 @@ public class SeatService {
         return repository.findAll();
     }
 
-    public Seat findById(Long id) throws RequestException {
+    public Seat findByIdOrThrow(Long id) throws RequestException {
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find seat with id: " + id));
+    }
+
+    public Optional<Seat> findById(Long id) throws RequestException {
+        return repository.findById(id);
     }
 
     public Seat addSeat(Seat seat) {
@@ -41,7 +46,7 @@ public class SeatService {
     }
 
     public Seat changeReservedState(Long id, boolean isReserved) throws IllegalArgumentException {
-        Seat seat = findById(id);
+        Seat seat = findByIdOrThrow(id);
         if (isReserved && seat.isReserved()) {
             throw new RequestException(String.format("Seat %s is already reserved", id));
         }

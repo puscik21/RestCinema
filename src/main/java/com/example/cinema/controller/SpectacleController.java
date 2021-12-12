@@ -1,7 +1,7 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.entity.Auditorium;
-import com.example.cinema.service.AuditoriumService;
+import com.example.cinema.entity.Spectacle;
+import com.example.cinema.service.SpectacleService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,24 +14,23 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auditorium")
+@RequestMapping("/spectacles")
 @AllArgsConstructor
-public class AuditoriumController {
-
-    private final AuditoriumService service;
+public class SpectacleController {
+    private final SpectacleService service;
 
     @GetMapping
-    public List<Auditorium> getAllAuditoriums() {
+    public List<Spectacle> getAllSpectacles() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public Auditorium getSeatById(@PathVariable Long id) {
+    public Spectacle getSeatById(@PathVariable Long id) {
         return service.findByIdOrThrow(id);
     }
 
     @PostMapping
-    public Auditorium addAuditorium(@RequestBody @Valid Auditorium auditorium) {
-        return service.addAuditorium(auditorium);
+    public Spectacle addSpectacle(@RequestBody @Valid Spectacle spectacle) {
+        return service.addSpectacle(spectacle);
     }
 }

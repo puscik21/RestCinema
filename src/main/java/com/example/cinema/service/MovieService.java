@@ -1,6 +1,5 @@
 package com.example.cinema.service;
 
-
 import com.example.cinema.entity.Movie;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.MovieRepository;
@@ -8,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -18,8 +18,12 @@ public class MovieService {
         return repository.findAll();
     }
 
-    public Movie findById(Long id) throws RequestException {
+    public Movie findByIdOrThrow(Long id) throws RequestException {
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find movie with id: " + id));
+    }
+
+    public Optional<Movie> findById(Long id) throws RequestException {
+        return repository.findById(id);
     }
 
     public Movie addMovie(Movie movie) {

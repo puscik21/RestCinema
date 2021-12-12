@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,8 +18,12 @@ public class AuditoriumService {
         return repository.findAll();
     }
 
-    public Auditorium findById(Long id) throws RequestException {
+    public Auditorium findByIdOrThrow(Long id) throws RequestException {
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find auditorium with id: " + id));
+    }
+
+    public Optional<Auditorium> findById(Long id) throws RequestException {
+        return repository.findById(id);
     }
 
     public Auditorium findByNumber(int number) {

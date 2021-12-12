@@ -29,7 +29,7 @@ public class SeatController {
 
     @GetMapping("/{id}")
     public Seat getSeatById(@PathVariable Long id) {
-        return seatService.findById(id);
+        return seatService.findByIdOrThrow(id);
     }
 
     @PostMapping

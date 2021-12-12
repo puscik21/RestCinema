@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,8 +18,12 @@ public class SpectatorService {
         return repository.findAll();
     }
 
-    public Spectator findById(Long id) throws RequestException {
+    public Spectator findByIdOrThrow(Long id) throws RequestException {
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find spectator with id: " + id));
+    }
+
+    public Optional<Spectator> findById(Long id) throws RequestException {
+        return repository.findById(id);
     }
 
     public Spectator addSpectator(Spectator spectator) {

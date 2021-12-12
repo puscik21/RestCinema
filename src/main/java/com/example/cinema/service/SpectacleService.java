@@ -6,14 +6,16 @@ import com.example.cinema.repository.SpectacleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class SpectacleService {
 
     private final SpectacleRepository repository;
-    private final SeatService seatService;
 
     // TODO: 11.11.2021 make it chronological
     // TODO: 11.11.2021 add pagination
@@ -22,11 +24,16 @@ public class SpectacleService {
         return repository.findAll();
     }
 
-    public Spectacle findById(Long id) throws RequestException {
-        return repository.findById(id).orElseThrow(() -> new RequestException("Could not find seat with id: " + id));
+    public Spectacle findByIdOrThrow(Long id) throws RequestException {
+        return repository.findById(id).orElseThrow(() -> new RequestException("Could not find spectacle with id: " + id));
+    }
+
+    public Optional<Spectacle> findById(Long id) throws RequestException {
+        return repository.findById(id);
     }
 
     public Spectacle addSpectacle(Spectacle spectacle) {
+        spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         return repository.save(spectacle);
     }
 
