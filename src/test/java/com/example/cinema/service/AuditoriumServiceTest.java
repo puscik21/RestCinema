@@ -40,7 +40,7 @@ public class AuditoriumServiceTest {
 
     @Test
     public void auditoriumShouldBeFound() {
-        Auditorium fromService = auditoriumService.findById(anyLong());
+        Auditorium fromService = auditoriumService.findByIdOrThrow(anyLong());
         Auditorium fromMock = mockService.prepareAuditorium();
         compareAuditoriums(fromService, fromMock);
     }
@@ -52,7 +52,7 @@ public class AuditoriumServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(auditoriumRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> auditoriumService.findById(anyLong()));
+        assertThrows(RequestException.class, () -> auditoriumService.findByIdOrThrow(anyLong()));
     }
 
     @Test

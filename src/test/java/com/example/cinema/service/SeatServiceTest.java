@@ -48,7 +48,7 @@ class SeatServiceTest {
 
     @Test
     public void seatShouldBeFound() {
-        Seat fromService = seatService.findById(anyLong());
+        Seat fromService = seatService.findByIdOrThrow(anyLong());
         Seat fromMock = mockService.prepareSeat();
         compareSeats(fromService, fromMock);
     }
@@ -61,7 +61,7 @@ class SeatServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(seatRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> seatService.findById(anyLong()));
+        assertThrows(RequestException.class, () -> seatService.findByIdOrThrow(anyLong()));
     }
 
     @Test
