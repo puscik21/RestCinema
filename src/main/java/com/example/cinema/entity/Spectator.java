@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +35,13 @@ public class Spectator {
 
     @Column(unique = true)
     @NotNull(message = "Spectator email cannot be null")
+    @Email(message = "Wrong email format")
     private String email;
 
     @NotNull(message = "Spectator phone number cannot be null")
-    private int phoneNumber;
+    private String phoneNumber;
 
-    public Spectator(String name, String email, int phoneNumber) {
+    public Spectator(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

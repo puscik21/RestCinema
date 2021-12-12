@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +38,6 @@ public class Spectacle {
     @JsonBackReference(value = "auditorium_spectacles")
     private Auditorium auditorium;
 
-    @NotNull(message = "Spectacle date time cannot be null")
     private LocalDateTime dateTime;
 
     public Spectacle(Movie movie, Auditorium auditorium, LocalDateTime dateTime) {
