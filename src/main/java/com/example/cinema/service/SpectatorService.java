@@ -27,6 +27,9 @@ public class SpectatorService {
     }
 
     public Spectator addSpectator(Spectator spectator) {
+        if (repository.findByEmail(spectator.getEmail()).isPresent()){
+            throw new RequestException(String.format("Spectator with email %s already exists", spectator.getEmail()));
+        }
         return repository.save(spectator);
     }
 
