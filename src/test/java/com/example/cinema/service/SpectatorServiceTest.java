@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,14 +42,7 @@ public class SpectatorServiceTest {
     public void spectatorShouldBeFound() {
         Spectator fromService = spectatorService.findByIdOrThrow(anyLong());
         Spectator fromMock = mockService.prepareSpectator();
-        compareSpectators(fromService, fromMock);
-    }
-
-    private void compareSpectators(Spectator s1, Spectator s2) {
-        assertEquals(s1.getEmail(), s2.getEmail());
-        assertEquals(s1.getName(), s2.getName());
-        assertEquals(s1.getPhoneNumber(), s2.getPhoneNumber());
-        assertEquals(s1.getReservations(), s2.getReservations());
+        assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
     @Test

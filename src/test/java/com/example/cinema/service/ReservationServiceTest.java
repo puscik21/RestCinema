@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -31,12 +32,10 @@ public class ReservationServiceTest {
     @Mock
     private SeatService seatService;
 
-
     @Autowired
     private MockService mockService;
 
     private ReservationService reservationService;
-
 
     @BeforeEach
     void setUp() {
@@ -55,12 +54,7 @@ public class ReservationServiceTest {
     public void reservationShouldBeFound() {
         Reservation fromService = reservationService.findByIdOrThrow(anyLong());
         Reservation fromMock = mockService.prepareReservation();
-        compareReservations(fromService, fromMock);
-    }
-
-    // TODO: 12.12.2021 nice functionality to compare objects - override equals() would be ok?
-    private void compareReservations(Reservation s1, Reservation s2) {
-        assertEquals(s1.getSeat().getNumber(), s2.getSeat().getNumber());
+        assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
     @Test

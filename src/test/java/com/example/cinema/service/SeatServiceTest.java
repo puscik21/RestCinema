@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -50,12 +51,7 @@ class SeatServiceTest {
     public void seatShouldBeFound() {
         Seat fromService = seatService.findByIdOrThrow(anyLong());
         Seat fromMock = mockService.prepareSeat();
-        compareSeats(fromService, fromMock);
-    }
-
-    private void compareSeats(Seat s1, Seat s2) {
-        assertEquals(s1.getNumber(), s2.getNumber());
-        assertEquals(s1.isReserved(), s2.isReserved());
+        assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
     @Test

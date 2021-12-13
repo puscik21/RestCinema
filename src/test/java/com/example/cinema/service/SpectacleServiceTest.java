@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -41,12 +41,7 @@ public class SpectacleServiceTest {
     public void spectacleShouldBeFound() {
         Spectacle fromService = spectacleService.findByIdOrThrow(anyLong());
         Spectacle fromMock = mockService.prepareSpectacle();
-        compareSpectacles(fromService, fromMock);
-    }
-
-    private void compareSpectacles(Spectacle s1, Spectacle s2) {
-        assertEquals(s1.getDateTime(), s2.getDateTime());
-        assertEquals(s1.getMovie(), s2.getMovie());
+        assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
     @Test

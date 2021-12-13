@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -42,11 +42,7 @@ public class AuditoriumServiceTest {
     public void auditoriumShouldBeFound() {
         Auditorium fromService = auditoriumService.findByIdOrThrow(anyLong());
         Auditorium fromMock = mockService.prepareAuditorium();
-        compareAuditoriums(fromService, fromMock);
-    }
-
-    private void compareAuditoriums(Auditorium s1, Auditorium s2) {
-        assertEquals(s1.getNumber(), s2.getNumber());
+        assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
     @Test
