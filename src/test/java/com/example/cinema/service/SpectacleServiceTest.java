@@ -25,22 +25,21 @@ public class SpectacleServiceTest {
     @Mock
     private SpectacleRepository spectacleRepository;
 
-    @Autowired
     private MockService mockService;
-
     private SpectacleService spectacleService;
 
     @BeforeEach
     void setUp() {
+        mockService = new MockService();
         spectacleRepository = Mockito.mock(SpectacleRepository.class);
         spectacleService = new SpectacleService(spectacleRepository);
-        Mockito.when(spectacleRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareSpectacle()));
+        Mockito.when(spectacleRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectacle()));
     }
 
     @Test
     public void spectacleShouldBeFound() {
         Spectacle fromService = spectacleService.findByIdOrThrow(anyLong());
-        Spectacle fromMock = mockService.prepareSpectacle();
+        Spectacle fromMock = mockService.getSpectacle();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 

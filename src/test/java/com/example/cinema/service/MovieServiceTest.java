@@ -25,22 +25,21 @@ public class MovieServiceTest {
     @Mock
     private MovieRepository movieRepository;
 
-    @Autowired
     private MockService mockService;
-
     private MovieService movieService;
 
     @BeforeEach
     void setUp() {
+        mockService = new MockService();
         movieRepository = Mockito.mock(MovieRepository.class);
         movieService = new MovieService(movieRepository);
-        Mockito.when(movieRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareMovie()));
+        Mockito.when(movieRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getMovie()));
     }
 
     @Test
     public void movieShouldBeFound() {
         Movie fromService = movieService.findByIdOrThrow(anyLong());
-        Movie fromMock = mockService.prepareMovie();
+        Movie fromMock = mockService.getMovie();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 

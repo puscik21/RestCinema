@@ -26,22 +26,21 @@ public class SpectatorServiceTest {
     @Mock
     private SpectatorRepository spectatorRepository;
 
-    @Autowired
     private MockService mockService;
-
     private SpectatorService spectatorService;
 
     @BeforeEach
     void setUp() {
+        mockService = new MockService();
         spectatorRepository = Mockito.mock(SpectatorRepository.class);
         spectatorService = new SpectatorService(spectatorRepository);
-        Mockito.when(spectatorRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareSpectator()));
+        Mockito.when(spectatorRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectator()));
     }
 
     @Test
     public void spectatorShouldBeFound() {
         Spectator fromService = spectatorService.findByIdOrThrow(anyLong());
-        Spectator fromMock = mockService.prepareSpectator();
+        Spectator fromMock = mockService.getSpectator();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
@@ -53,7 +52,7 @@ public class SpectatorServiceTest {
 
     @Test
     public void addExistingEmailShouldReturnException() {
-        Spectator spectator = mockService.prepareSpectator();
+        Spectator spectator = mockService.getSpectator();
         when(spectatorRepository.findByEmail(anyString())).thenReturn(Optional.of(spectator));
         assertThrows(RequestException.class, () -> spectatorService.addSpectator(spectator));
     }

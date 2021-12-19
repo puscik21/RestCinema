@@ -31,26 +31,25 @@ class SeatServiceTest {
     @Mock
     private AuditoriumRepository auditoriumRepository;
 
-    @Autowired
     private MockService mockService;
-
     private SeatService seatService;
     private AuditoriumService auditoriumService;
 
     @BeforeEach
     void setUp() {
+        mockService = new MockService();
         seatRepository = Mockito.mock(SeatRepository.class);
         auditoriumRepository = Mockito.mock(AuditoriumRepository.class);
         auditoriumService = new AuditoriumService(auditoriumRepository);
         seatService = new SeatService(seatRepository, auditoriumService);
-        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareSeat()));
-        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.prepareSeat()));
+        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
+        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
     }
 
     @Test
     public void seatShouldBeFound() {
         Seat fromService = seatService.findByIdOrThrow(anyLong());
-        Seat fromMock = mockService.prepareSeat();
+        Seat fromMock = mockService.getSeat();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
@@ -62,16 +61,17 @@ class SeatServiceTest {
 
     @Test
     public void reservationForReservedShouldReturnException() {
-        Seat seat = mockService.prepareSeat();
+        Seat seat = mockService.getSeat();
         seat.setReserved(true);
         when(seatRepository.findById(anyLong())).thenReturn(Optional.of(seat));
         assertThrows(RequestException.class, () -> seatService.changeReservedState(anyLong(), true));
     }
 
+    // TODO: 13.12.2021 retest
     @Test
     public void addExistingNumberInAuditoriumShouldReturnException() {
-        Seat seat = mockService.prepareSeat();
-        when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.prepareAuditoriumWithSeat()));
+        Seat seat = mockService.getSeat();
+        when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.getAuditorium()));
         Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
         assertEquals(String.format("Seat with number %s already exists in auditorium %s",
                 seat.getNumber(), seat.getAuditorium().getNumber()), e.getMessage());
@@ -79,7 +79,7 @@ class SeatServiceTest {
 
     @Test
     public void addSeatWithoutAuditoriumNumberShouldReturnException() {
-        Seat seat = mockService.prepareSeat();
+        Seat seat = mockService.getSeat();
         seat.getAuditorium().setNumber(null);
         Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
         assertEquals(String.format("Trying to add seat %s without providing auditorum number", seat.getNumber()), e.getMessage());

@@ -26,22 +26,21 @@ public class AuditoriumServiceTest {
     @Mock
     private AuditoriumRepository auditoriumRepository;
 
-    @Autowired
     private MockService mockService;
-
     private AuditoriumService auditoriumService;
 
     @BeforeEach
     void setUp() {
+        mockService = new MockService();
         auditoriumRepository = Mockito.mock(AuditoriumRepository.class);
         auditoriumService = new AuditoriumService(auditoriumRepository);
-        Mockito.when(auditoriumRepository.findById(anyLong())).thenReturn(Optional.of(mockService.prepareAuditorium()));
+        Mockito.when(auditoriumRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getAuditorium()));
     }
 
     @Test
     public void auditoriumShouldBeFound() {
         Auditorium fromService = auditoriumService.findByIdOrThrow(anyLong());
-        Auditorium fromMock = mockService.prepareAuditorium();
+        Auditorium fromMock = mockService.getAuditorium();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
 
@@ -53,7 +52,7 @@ public class AuditoriumServiceTest {
 
     @Test
     public void addExistingNumberShouldReturnException() {
-        Auditorium auditorium = mockService.prepareAuditorium();
+        Auditorium auditorium = mockService.getAuditorium();
         when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(auditorium));
         assertThrows(RequestException.class, () -> auditoriumService.addAuditorium(auditorium));
     }
