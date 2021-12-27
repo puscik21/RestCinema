@@ -1,6 +1,7 @@
 package com.example.cinema.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ public class Spectacle {
     @JsonBackReference(value = "auditorium_spectacles")
     private Auditorium auditorium;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
 
     public Spectacle(Movie movie, Auditorium auditorium, LocalDateTime dateTime) {
