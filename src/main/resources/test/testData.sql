@@ -1,3 +1,10 @@
+-- clear tables before inserting test data
+delete from seat;
+delete from spectacle;
+delete from auditorium;
+delete from movie;
+delete from spectator;
+
 -- auditorium
 insert into auditorium (id, number) values (1, 1);
 
