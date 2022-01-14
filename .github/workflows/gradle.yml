@@ -22,7 +22,6 @@ jobs:
         uses: actions/setup-java@v1.4.3
         with:
           java-version: 11
-          distribution: 'adopt'
       - name: Build with Gradle
         uses: ./gradlew build
         with:
