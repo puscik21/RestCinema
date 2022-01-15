@@ -37,6 +37,6 @@ test {
 
 tasks.withType(Test) {
     testLogging {
-        events "started", "skipped", "passed", "failed"
+        events "passed", "failed"
     }
 }
