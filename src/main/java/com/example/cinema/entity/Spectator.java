@@ -26,7 +26,7 @@ public class Spectator {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "spectator")
     @JsonManagedReference(value = "spectator_reservations")
     private List<Reservation> reservations;
 

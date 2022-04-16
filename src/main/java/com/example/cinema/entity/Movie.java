@@ -21,7 +21,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "movie")
     @JsonManagedReference(value = "movie_spectacles")
     private List<Spectacle> spectacles;
 
