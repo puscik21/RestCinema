@@ -6,6 +6,7 @@ import com.example.cinema.repository.MovieRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ public class MovieService {
 
     public Movie addMovie(Movie movie) {
         movie.setId(null);
+        movie.setSpectacles(Collections.emptyList());
         return repository.save(movie);
     }
 

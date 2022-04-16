@@ -6,6 +6,7 @@ import com.example.cinema.repository.AuditoriumRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class AuditoriumService {
             throw new RequestException(String.format("Auditorium with number %s already exists", auditorium.getNumber()));
         }
         auditorium.setId(null);
+        auditorium.setSpectacles(Collections.emptyList());
         return repository.save(auditorium);
     }
 

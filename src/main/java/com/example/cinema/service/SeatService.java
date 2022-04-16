@@ -7,6 +7,7 @@ import com.example.cinema.repository.SeatRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class SeatService {
         }
         seat.setId(null);
         seat.setAuditorium(auditorium);
+        seat.setReservations(Collections.emptyList());
         return repository.save(seat);
     }
 
