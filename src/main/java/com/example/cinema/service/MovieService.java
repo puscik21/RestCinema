@@ -27,6 +27,7 @@ public class MovieService {
     }
 
     public Movie addMovie(Movie movie) {
+        movie.setId(null);
         return repository.save(movie);
     }
 

@@ -33,6 +33,7 @@ public class ReservationService {
     public Reservation addReservation(Reservation reservation) {
         checkIfDependenciesExist(reservation);
         checkIfReservationAlreadyExists(reservation);
+        reservation.setId(null);
         return repository.save(reservation);
     }
 

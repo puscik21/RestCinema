@@ -34,6 +34,7 @@ public class AuditoriumService {
         if (repository.findByNumber(auditorium.getNumber()).isPresent()){
             throw new RequestException(String.format("Auditorium with number %s already exists", auditorium.getNumber()));
         }
+        auditorium.setId(null);
         return repository.save(auditorium);
     }
 

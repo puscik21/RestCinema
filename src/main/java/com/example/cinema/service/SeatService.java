@@ -37,6 +37,7 @@ public class SeatService {
             throw new RequestException(String.format("Seat with number %s already exists in auditorium %s",
                     seat.getNumber(), seat.getAuditorium().getNumber()));
         }
+        seat.setId(null);
         seat.setAuditorium(auditorium);
         return repository.save(seat);
     }

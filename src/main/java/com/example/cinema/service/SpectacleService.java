@@ -33,7 +33,8 @@ public class SpectacleService {
     }
 
     public Spectacle addSpectacle(Spectacle spectacle) {
-        spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // TODO: 4/16/2022 @Valid for date
+        spectacle.setId(null);
         return repository.save(spectacle);
     }
 
