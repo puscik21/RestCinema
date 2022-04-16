@@ -39,13 +39,16 @@ public class SeatController {
     }
 
     @PostMapping
-    public Seat addSeat(@RequestBody @Valid Seat seat) {
-        return service.addSeat(seat);
+    public SeatDTO addSeat(@RequestBody @Valid SeatDTO seatDTO) {
+        Seat seat = service.addSeat(mappingService.map(seatDTO));
+        return mappingService.map(seat);
     }
 
+    // TODO: 4/16/2022 PUT/PATCH method
     @PutMapping("/{id}")
-    public Seat changeReservedState(@PathVariable Long id, @RequestBody Seat seat) {
-        return service.changeReservedState(id, seat.isReserved());
+    public SeatDTO changeReservedState(@PathVariable Long id, @RequestBody SeatDTO seatDTO) {
+        Seat seat = service.changeReservedState(id, seatDTO.isReserved());
+        return mappingService.map(seat);
     }
 
     @DeleteMapping("/{id}")

@@ -37,7 +37,8 @@ public class SpectatorController {
     }
 
     @PostMapping
-    public Spectator addSpectator(@RequestBody @Valid Spectator spectator) {
-        return service.addSpectator(spectator);
+    public SpectatorDTO addSpectator(@RequestBody @Valid SpectatorDTO spectatorDTO) {
+        Spectator spectator = service.addSpectator(mappingService.map(spectatorDTO));
+        return mappingService.map(spectator);
     }
 }

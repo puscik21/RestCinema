@@ -37,7 +37,8 @@ public class MovieController {
     }
 
     @PostMapping
-    public Movie addMovie(@RequestBody @Valid Movie movie) {
-        return service.addMovie(movie);
+    public MovieDTO addMovie(@RequestBody @Valid MovieDTO movieDTO) {
+        Movie movie = service.addMovie(mappingService.map(movieDTO));
+        return mappingService.map(movie);
     }
 }

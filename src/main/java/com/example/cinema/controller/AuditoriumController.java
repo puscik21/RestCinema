@@ -37,7 +37,8 @@ public class AuditoriumController {
     }
 
     @PostMapping
-    public Auditorium addAuditorium(@RequestBody @Valid Auditorium auditorium) {
-        return service.addAuditorium(auditorium);
+    public AuditoriumDTO addAuditorium(@RequestBody @Valid AuditoriumDTO auditoriumDTO) {
+        Auditorium auditorium = service.addAuditorium(mappingService.map(auditoriumDTO));
+        return mappingService.map(auditorium);
     }
 }

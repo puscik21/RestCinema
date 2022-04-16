@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class MappingService {
     private final ModelMapper mapper;
 
-    // TODO: 4/16/2022 try to make more DRY code (use interface i.e.)
     public AuditoriumDTO map(Auditorium auditorium) {
         AuditoriumDTO auditoriumDTO = mapper.map(auditorium, AuditoriumDTO.class);
         auditoriumDTO.setSeatDTOs(auditorium.getSeats().stream()
@@ -59,5 +58,52 @@ public class MappingService {
                 .map(this::map)
                 .collect(Collectors.toList()));
         return spectatorDTO;
+    }
+
+    public Auditorium map(AuditoriumDTO auditoriumDTO) {
+        Auditorium auditorium = mapper.map(auditoriumDTO, Auditorium.class);
+        auditorium.setSeats(auditoriumDTO.getSeatDTOs().stream()
+                .map(this::map)
+                .collect(Collectors.toList()));
+        auditorium.setSpectacles(auditoriumDTO.getSpectacleDTOs().stream()
+                .map(this::map)
+                .collect(Collectors.toList()));
+        return auditorium;
+    }
+
+    public Movie map(MovieDTO movieDTO) {
+        Movie movie = mapper.map(movieDTO, Movie.class);
+        movie.setSpectacles(movieDTO.getSpectacleDTOs().stream()
+                .map(this::map)
+                .collect(Collectors.toList()));
+        return movie;
+    }
+
+    public Reservation map(ReservationDTO reservationDTO) {
+        return mapper.map(reservationDTO, Reservation.class);
+    }
+
+    public Seat map(SeatDTO seatDTO) {
+        Seat seat = mapper.map(seatDTO, Seat.class);
+        seat.setReservations(seatDTO.getReservationDTOs().stream()
+                .map(this::map)
+                .collect(Collectors.toList()));
+        return seat;
+    }
+
+    public Spectacle map(SpectacleDTO spectacleDTO) {
+        Spectacle spectacle = mapper.map(spectacleDTO, Spectacle.class);
+        spectacle.setReservations(spectacleDTO.getReservationDTOs().stream()
+                .map(this::map)
+                .collect(Collectors.toList()));
+        return spectacle;
+    }
+
+    public Spectator map(SpectatorDTO spectatorDTO) {
+        Spectator spectator = mapper.map(spectatorDTO, Spectator.class);
+        spectator.setReservations(spectatorDTO.getReservationDTOs().stream()
+                .map(this::map)
+                .collect(Collectors.toList()));
+        return spectator;
     }
 }

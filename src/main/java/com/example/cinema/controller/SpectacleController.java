@@ -37,7 +37,8 @@ public class SpectacleController {
     }
 
     @PostMapping
-    public Spectacle addSpectacle(@RequestBody @Valid Spectacle spectacle) {
-        return service.addSpectacle(spectacle);
+    public SpectacleDTO addSpectacle(@RequestBody @Valid SpectacleDTO spectacleDTO) {
+        Spectacle spectacle = service.addSpectacle(mappingService.map(spectacleDTO));
+        return mappingService.map(spectacle);
     }
 }

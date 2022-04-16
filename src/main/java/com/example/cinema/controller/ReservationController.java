@@ -37,7 +37,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public Reservation addReservation(@RequestBody @Valid Reservation reservation) {
-        return service.addReservation(reservation);
+    public ReservationDTO addReservation(@RequestBody @Valid ReservationDTO reservationDTO) {
+        Reservation reservation = service.addReservation(mappingService.map(reservationDTO));
+        return mappingService.map(reservation);
     }
 }
