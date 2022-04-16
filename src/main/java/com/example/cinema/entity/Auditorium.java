@@ -27,7 +27,7 @@ public class Auditorium {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // note: IDENTITY generation disables batch updates
     private Long id;
 
-    @OneToMany(mappedBy = "auditorium", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "auditorium", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JsonManagedReference(value = "auditorium_seats")
     private List<Seat> seats;
 
