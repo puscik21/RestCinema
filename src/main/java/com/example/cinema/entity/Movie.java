@@ -1,6 +1,5 @@
 package com.example.cinema.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +21,6 @@ public class Movie {
     private Long id;
 
     @OneToMany(mappedBy = "movie")
-    @JsonManagedReference(value = "movie_spectacles")
     private List<Spectacle> spectacles;
 
     @NotNull(message = "Movie name cannot be null")

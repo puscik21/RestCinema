@@ -1,13 +1,10 @@
 package com.example.cinema.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,11 +26,9 @@ public class Seat {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JsonBackReference(value = "auditorium_seats")
     private Auditorium auditorium;
 
     @OneToMany(mappedBy = "seat")
-    @JsonManagedReference(value = "seat_reservations")
     private List<Reservation> reservations;
 
     @Min(value = 1, message = "Seat number must be greater then 0")
