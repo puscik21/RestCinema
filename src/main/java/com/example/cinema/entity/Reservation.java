@@ -1,6 +1,5 @@
 package com.example.cinema.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,15 +22,12 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference(value = "spectacle_reservations")
     private Spectacle spectacle;
 
     @ManyToOne
-    @JsonBackReference(value = "seat_reservations")
     private Seat seat;
 
     @ManyToOne
-    @JsonBackReference(value = "spectator_reservations")
     private Spectator spectator;
 
     public Reservation(Spectacle spectacle, Seat seat, Spectator spectator) {

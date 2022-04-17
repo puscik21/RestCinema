@@ -63,14 +63,6 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void addExistingReservationShouldReturnException() {
-        Reservation reservation = mockService.getReservation();
-        when(reservationRepository.findByDependenciesIds(anyLong(), anyLong(), anyLong())).thenReturn(Optional.of(reservation));
-        when(spectatorService.findByIdOrThrow(anyLong())).thenReturn(mockService.getSpectator());
-        assertThrows(RequestException.class, () -> reservationService.addReservation(reservation));
-    }
-
-    @Test
     public void addWithNoExistingSpectacleShouldReturnException() {
         Reservation reservation = mockService.getReservation();
         when(spectacleService.findById(anyLong())).thenReturn(Optional.empty());
@@ -93,4 +85,6 @@ public class ReservationServiceTest {
         Exception e = assertThrows(RequestException.class, () -> reservationService.addReservation(reservation));
         assertEquals(String.format("Could not find seat with id:  %s", reservation.getSeat().getId()), e.getMessage());
     }
+
+    // TODO: 4/17/2022 check if seat is reserved
 }

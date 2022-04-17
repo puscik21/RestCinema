@@ -1,8 +1,6 @@
 package com.example.cinema.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,15 +26,12 @@ public class Spectacle {
     private Long id;
 
     @OneToMany(mappedBy = "spectacle")
-    @JsonManagedReference(value = "spectacle_reservations")
     private List<Reservation> reservations;
 
     @ManyToOne
-    @JsonBackReference(value = "movie_spectacles")
     private Movie movie;
 
     @ManyToOne
-    @JsonBackReference(value = "auditorium_spectacles")
     private Auditorium auditorium;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

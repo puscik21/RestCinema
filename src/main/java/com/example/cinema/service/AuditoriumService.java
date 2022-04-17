@@ -6,6 +6,7 @@ import com.example.cinema.repository.AuditoriumRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,14 +27,12 @@ public class AuditoriumService {
         return repository.findById(id);
     }
 
-    public Auditorium findByNumber(int number) {
-        return repository.findByNumber(number).orElseThrow(() -> new RequestException("Could not find auditorium with number: " + number));
-    }
-
     public Auditorium addAuditorium(Auditorium auditorium) {
-        if (repository.findByNumber(auditorium.getNumber()).isPresent()){
+        if (repository.findByNumber(auditorium.getNumber()).isPresent()) {
             throw new RequestException(String.format("Auditorium with number %s already exists", auditorium.getNumber()));
         }
+        auditorium.setId(null);
+        auditorium.setSpectacles(Collections.emptyList());
         return repository.save(auditorium);
     }
 

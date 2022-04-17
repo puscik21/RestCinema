@@ -6,6 +6,7 @@ import com.example.cinema.repository.SpectatorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,8 @@ public class SpectatorService {
         if (repository.findByEmail(spectator.getEmail()).isPresent()){
             throw new RequestException(String.format("Spectator with email %s already exists", spectator.getEmail()));
         }
+        spectator.setId(null);
+        spectator.setReservations(Collections.emptyList());
         return repository.save(spectator);
     }
 
