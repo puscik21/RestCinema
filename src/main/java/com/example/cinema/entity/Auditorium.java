@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class Auditorium {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // note: IDENTITY generation disables batch updates
     private Long id;
 
-    @OneToMany(mappedBy = "auditorium", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "auditorium", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "auditorium_seats")
     private List<Seat> seats;
 

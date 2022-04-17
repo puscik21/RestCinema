@@ -30,13 +30,10 @@ public class SeatService {
     }
 
     public Seat addSeat(Seat seat) {
-        if (seat.getAuditorium().getNumber() == null) {
-            throw new RequestException(String.format("Trying to add seat %s without providing auditorum number", seat.getNumber()));
-        }
-        Auditorium auditorium = auditoriumService.findByNumber(seat.getAuditorium().getNumber());
+        Auditorium auditorium = auditoriumService.findByIdOrThrow(seat.getAuditorium().getId());
         if (repository.findSeatByNumber(seat.getNumber()).isPresent()) {
-            throw new RequestException(String.format("Seat with number %s already exists in auditorium %s",
-                    seat.getNumber(), seat.getAuditorium().getNumber()));
+            throw new RequestException(String.format("Seat with number %s already exists in auditorium number %s",
+                    seat.getNumber(), auditorium.getNumber()));
         }
         seat.setId(null);
         seat.setAuditorium(auditorium);

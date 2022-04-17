@@ -28,7 +28,7 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // note: IDENTITY generation disables batch updates
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JsonBackReference(value = "auditorium_seats")
     private Auditorium auditorium;
 
