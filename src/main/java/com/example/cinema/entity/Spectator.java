@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +25,10 @@ public class Spectator {
 
     @OneToMany(mappedBy = "spectator")
     private List<Reservation> reservations;
-
-    @NotNull(message = "Spectator name cannot be null")
     private String name;
 
     @Column(unique = true)
-    @NotNull(message = "Spectator email cannot be null")
-    @Email(message = "Wrong email format")
     private String email;
-
-    @NotNull(message = "Spectator phone number cannot be null")
     private String phoneNumber;
 
     public Spectator(String name, String email, String phoneNumber) {

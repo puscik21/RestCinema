@@ -12,8 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +32,6 @@ public class Auditorium {
     private List<Spectacle> spectacles;
 
     @Column(unique = true)
-    @Min(value = 1, message = "Auditorium number must be greater then 0")
-    @NotNull(message = "Auditorium number cannot be null")
     private Integer number;
 
     public Auditorium(int number, int numberOfSeats) {

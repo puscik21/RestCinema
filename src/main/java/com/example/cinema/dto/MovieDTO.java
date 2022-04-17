@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -12,5 +13,7 @@ import java.util.List;
 public class MovieDTO {
     private Long id;
     private List<SpectacleDTO> spectacleDTOs;
+
+    @NotNull(message = "Movie name cannot be null")
     private String name;
 }
