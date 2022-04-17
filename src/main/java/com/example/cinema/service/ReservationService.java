@@ -33,9 +33,8 @@ public class ReservationService {
 
     public Reservation addReservation(Reservation reservation) {
         checkIfDependenciesExist(reservation);
-        checkIfReservationAlreadyExists(reservation);
         Seat seat = seatService.findByIdOrThrow(reservation.getSeat().getId());
-        checkIfSeatWithIdIsReserved(seat);
+        checkIfSeatIsReserved(seat);
         seat.setReserved(true);
         reservation.setId(null);
         return repository.save(reservation);
@@ -53,17 +52,7 @@ public class ReservationService {
         }
     }
 
-    private void checkIfReservationAlreadyExists(Reservation reservation) {
-        if (repository.findByDependenciesIds(reservation.getSpectacle().getId(),
-                        reservation.getSeat().getId(),
-                        reservation.getSpectator().getId())
-                .isPresent()) {
-            throw new RequestException(String.format("Reservation already exists for email: %s",
-                    spectatorService.findByIdOrThrow(reservation.getSpectator().getId()).getEmail()));
-        }
-    }
-
-    private void checkIfSeatWithIdIsReserved(Seat seat) {
+    private void checkIfSeatIsReserved(Seat seat) {
         if (seat.isReserved()) {
             throw new RequestException(String.format("Seat with number %s is already reserved", seat.getNumber()));
         }
