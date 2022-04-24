@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,9 @@ public class SpectacleService {
     }
 
     public Spectacle addSpectacle(Spectacle spectacle) {
-        spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // TODO: 4/16/2022 @Valid for date
+        spectacle.setId(null);
+        spectacle.setReservations(Collections.emptyList());
         return repository.save(spectacle);
     }
 
