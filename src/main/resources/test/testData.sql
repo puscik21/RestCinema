@@ -1,4 +1,5 @@
 -- clear tables before inserting test data
+delete from reservation;
 delete from seat;
 delete from spectacle;
 delete from auditorium;

@@ -1,18 +1,21 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.CinemaApplication;
 import com.example.cinema.MockService;
+import com.example.cinema.config.TestConfig;
+import com.example.cinema.dto.AuditoriumDTO;
 import com.example.cinema.entity.Auditorium;
 import com.example.cinema.exception.RequestExceptionHandler;
 import com.example.cinema.service.AuditoriumService;
+import com.example.cinema.service.MappingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,47 +25,57 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@Sql(scripts = "classpath:test/testData.sql")
-@SpringBootTest(classes = CinemaApplication.class)
+@Import(TestConfig.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@WebMvcTest(controllers = AuditoriumController.class)
 public class AuditoriumControllerTest {
 
-    private MockMvc mockMvc;
+    @MockBean
+    private AuditoriumService auditoriumService;
+
+    @Autowired
+    private AuditoriumController auditoriumController;
+
+    @Autowired
+    private MappingService mappingService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
-    private RequestExceptionHandler exceptionHandler;
+    private MockService mockService;
 
-    @MockBean
-    private AuditoriumService auditoriumService;
+    @Autowired
+    private RequestExceptionHandler requestExceptionHandler;
 
-    @BeforeEach
+    private MockMvc mockMvc;
+
+    private final String AUDITORIUMS_PATH = "/auditoriums";
+
+    @BeforeAll
     void setUp() {
-        AuditoriumController mockedTestController = new AuditoriumController(auditoriumService);
-        Mockito.when(auditoriumService.addAuditorium(Mockito.any(Auditorium.class))).thenReturn(new MockService().getAuditorium());
-        mockMvc = MockMvcBuilders.standaloneSetup(mockedTestController)
-                .setControllerAdvice(exceptionHandler)
+        Mockito.when(auditoriumService.addAuditorium(Mockito.any(Auditorium.class))).thenReturn(mockService.getAuditorium());
+        mockMvc = MockMvcBuilders.standaloneSetup(auditoriumController)
+                .setControllerAdvice(requestExceptionHandler)
                 .build();
     }
 
     @Test
     void auditoriumShouldBeAdded() throws Exception {
-        Auditorium auditorium = new MockService().getAuditorium();
-        String body = objectMapper.writeValueAsString(auditorium);
-        mockMvc.perform(post("/auditorium")
+        AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
+        String body = objectMapper.writeValueAsString(auditoriumDTO);
+        mockMvc.perform(post(AUDITORIUMS_PATH)
                         .contentType("application/json")
                         .content(body))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(auditorium)));
+                .andExpect(content().json(objectMapper.writeValueAsString(auditoriumDTO)));
     }
 
     @Test
     void return400ForViolatedAuditorium() throws Exception {
-        Auditorium auditorium = new Auditorium(0, 5);
-        String body = objectMapper.writeValueAsString(auditorium);
-        mockMvc.perform(post("/auditorium")
+        AuditoriumDTO auditoriumDTO = mappingService.map(new Auditorium(0, 5));
+        String body = objectMapper.writeValueAsString(auditoriumDTO);
+        mockMvc.perform(post(AUDITORIUMS_PATH)
                         .contentType("application/json")
                         .content(body))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))

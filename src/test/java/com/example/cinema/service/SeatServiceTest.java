@@ -71,7 +71,7 @@ class SeatServiceTest {
         Seat seat = mockService.getSeat();
         when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.getAuditorium()));
         Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
-        assertEquals(String.format("Seat with number %s already exists in1 auditorium %s",
+        assertEquals(String.format("Seat with number %s already exists in auditorium %s",
                 seat.getNumber(), seat.getAuditorium().getNumber()), e.getMessage());
     }
 
