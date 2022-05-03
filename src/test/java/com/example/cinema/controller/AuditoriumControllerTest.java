@@ -1,6 +1,6 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.MockService;
+import com.example.cinema.config.MockService;
 import com.example.cinema.config.TestConfig;
 import com.example.cinema.dto.AuditoriumDTO;
 import com.example.cinema.entity.Auditorium;

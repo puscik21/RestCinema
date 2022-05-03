@@ -41,15 +41,8 @@ public class ReservationService {
     }
 
     private void checkIfDependenciesExist(Reservation reservation) {
-        if (spectacleService.findById(reservation.getSpectacle().getId()).isEmpty()) {
-            throw new RequestException(String.format("Could not find spectacle with id:  %s", reservation.getSpectacle().getId()));
-        }
-        if (seatService.findById(reservation.getSeat().getId()).isEmpty()) {
-            throw new RequestException(String.format("Could not find seat with id:  %s", reservation.getSeat().getId()));
-        }
-        if (spectatorService.findById(reservation.getSpectator().getId()).isEmpty()) {
-            throw new RequestException(String.format("Could not find spectator with id:  %s", reservation.getSpectator().getId()));
-        }
+        spectacleService.findByIdOrThrow(reservation.getSpectacle().getId());
+        spectatorService.findByIdOrThrow(reservation.getSpectator().getId());
     }
 
     private void checkIfSeatIsReserved(Seat seat) {

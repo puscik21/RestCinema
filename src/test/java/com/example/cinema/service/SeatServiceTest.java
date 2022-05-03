@@ -1,16 +1,13 @@
 package com.example.cinema.service;
 
-import com.example.cinema.CinemaApplication;
-import com.example.cinema.MockService;
+import com.example.cinema.config.MockService;
 import com.example.cinema.entity.Seat;
 import com.example.cinema.exception.RequestException;
-import com.example.cinema.repository.AuditoriumRepository;
 import com.example.cinema.repository.SeatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
@@ -21,32 +18,27 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = CinemaApplication.class)
 class SeatServiceTest {
 
     @Mock
     private SeatRepository seatRepository;
 
     @Mock
-    private AuditoriumRepository auditoriumRepository;
-
-    private MockService mockService;
-    private SeatService seatService;
     private AuditoriumService auditoriumService;
+
+    private SeatService seatService;
+
+    private final MockService mockService = new MockService();
 
     @BeforeEach
     void setUp() {
-        mockService = new MockService();
-        seatRepository = Mockito.mock(SeatRepository.class);
-        auditoriumRepository = Mockito.mock(AuditoriumRepository.class);
-        auditoriumService = new AuditoriumService(auditoriumRepository);
+        MockitoAnnotations.openMocks(this);
         seatService = new SeatService(seatRepository, auditoriumService);
-        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
-        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
     }
 
     @Test
     public void seatShouldBeFound() {
+        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
         Seat fromService = seatService.findByIdOrThrow(anyLong());
         Seat fromMock = mockService.getSeat();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
@@ -69,18 +61,20 @@ class SeatServiceTest {
     @Test
     public void addExistingNumberInAuditoriumShouldReturnException() {
         Seat seat = mockService.getSeat();
-        when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.getAuditorium()));
+        when(auditoriumService.findByIdOrThrow(anyLong())).thenReturn(mockService.getAuditorium());
+        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
         Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
-        assertEquals(String.format("Seat with number %s already exists in auditorium %s",
+        assertEquals(String.format("Seat with number %s already exists in auditorium number %s",
                 seat.getNumber(), seat.getAuditorium().getNumber()), e.getMessage());
     }
 
     @Test
     public void addSeatWithoutAuditoriumNumberShouldReturnException() {
         Seat seat = mockService.getSeat();
-        seat.getAuditorium().setNumber(null);
+        when(auditoriumService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find auditorium with id: %s",
+                seat.getAuditorium().getId())));
         Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
-        assertEquals(String.format("Trying to add seat %s without providing auditorum number", seat.getNumber()), e.getMessage());
+        assertEquals(String.format("Could not find auditorium with id: %s", seat.getAuditorium().getId()), e.getMessage());
     }
 
 }

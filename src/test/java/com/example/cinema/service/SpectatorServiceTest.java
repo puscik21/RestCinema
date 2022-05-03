@@ -1,7 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.CinemaApplication;
-import com.example.cinema.MockService;
+import com.example.cinema.config.MockService;
 import com.example.cinema.entity.Spectator;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectatorRepository;
@@ -9,8 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
@@ -20,25 +18,24 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = CinemaApplication.class)
 public class SpectatorServiceTest {
 
     @Mock
     private SpectatorRepository spectatorRepository;
 
-    private MockService mockService;
     private SpectatorService spectatorService;
+
+    private final MockService mockService = new MockService();
 
     @BeforeEach
     void setUp() {
-        mockService = new MockService();
-        spectatorRepository = Mockito.mock(SpectatorRepository.class);
+        MockitoAnnotations.openMocks(this);
         spectatorService = new SpectatorService(spectatorRepository);
-        Mockito.when(spectatorRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectator()));
     }
 
     @Test
     public void spectatorShouldBeFound() {
+        Mockito.when(spectatorRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectator()));
         Spectator fromService = spectatorService.findByIdOrThrow(anyLong());
         Spectator fromMock = mockService.getSpectator();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);

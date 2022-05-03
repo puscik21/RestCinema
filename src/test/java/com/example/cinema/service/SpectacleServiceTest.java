@@ -1,7 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.CinemaApplication;
-import com.example.cinema.MockService;
+import com.example.cinema.config.MockService;
 import com.example.cinema.entity.Spectacle;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectacleRepository;
@@ -9,8 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
@@ -19,25 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = CinemaApplication.class)
 public class SpectacleServiceTest {
 
     @Mock
     private SpectacleRepository spectacleRepository;
 
-    private MockService mockService;
     private SpectacleService spectacleService;
+
+    private final MockService mockService = new MockService();
 
     @BeforeEach
     void setUp() {
-        mockService = new MockService();
-        spectacleRepository = Mockito.mock(SpectacleRepository.class);
+        MockitoAnnotations.openMocks(this);
         spectacleService = new SpectacleService(spectacleRepository);
-        Mockito.when(spectacleRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectacle()));
     }
 
     @Test
     public void spectacleShouldBeFound() {
+        Mockito.when(spectacleRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectacle()));
         Spectacle fromService = spectacleService.findByIdOrThrow(anyLong());
         Spectacle fromMock = mockService.getSpectacle();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
