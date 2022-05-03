@@ -1,16 +1,13 @@
 package com.example.cinema.service;
 
-import com.example.cinema.CinemaApplication;
-import com.example.cinema.MockService;
+import com.example.cinema.config.MockService;
 import com.example.cinema.entity.Seat;
 import com.example.cinema.exception.RequestException;
-import com.example.cinema.repository.AuditoriumRepository;
 import com.example.cinema.repository.SeatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
@@ -21,7 +18,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = CinemaApplication.class)
 class SeatServiceTest {
 
     @Mock
@@ -30,21 +26,19 @@ class SeatServiceTest {
     @Mock
     private AuditoriumService auditoriumService;
 
-    private MockService mockService;
     private SeatService seatService;
+
+    private final MockService mockService = new MockService();
 
     @BeforeEach
     void setUp() {
-        mockService = new MockService();
-        seatRepository = Mockito.mock(SeatRepository.class);
-        auditoriumService = Mockito.mock(AuditoriumService.class);
+        MockitoAnnotations.openMocks(this);
         seatService = new SeatService(seatRepository, auditoriumService);
-        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
-        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
     }
 
     @Test
     public void seatShouldBeFound() {
+        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
         Seat fromService = seatService.findByIdOrThrow(anyLong());
         Seat fromMock = mockService.getSeat();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
