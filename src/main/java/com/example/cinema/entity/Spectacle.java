@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -36,11 +35,4 @@ public class Spectacle {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
-
-    public Spectacle(Movie movie, Auditorium auditorium, LocalDateTime dateTime) {
-        this.movie = movie;
-        this.auditorium = auditorium;
-        this.dateTime = dateTime;
-        this.reservations = new LinkedList<>();
-    }
 }

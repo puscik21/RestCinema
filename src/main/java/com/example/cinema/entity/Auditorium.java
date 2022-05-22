@@ -38,8 +38,4 @@ public class Auditorium {
         this.number = number;
         seats = new ArrayList<>(numberOfSeats);
     }
-
-    public Seat getSeat(int number) {
-        return seats.get(number - 1);
-    }
 }
