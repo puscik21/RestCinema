@@ -2,11 +2,11 @@ package com.example.cinema.controller;
 
 import com.example.cinema.MockService;
 import com.example.cinema.config.TestConfig;
-import com.example.cinema.dto.AuditoriumDTO;
-import com.example.cinema.entity.Auditorium;
+import com.example.cinema.dto.SpectatorDTO;
+import com.example.cinema.entity.Spectator;
 import com.example.cinema.exception.RequestExceptionHandler;
-import com.example.cinema.service.AuditoriumService;
 import com.example.cinema.service.MappingService;
+import com.example.cinema.service.SpectatorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,14 +29,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(TestConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WebMvcTest(controllers = AuditoriumController.class)
-public class AuditoriumControllerTest {
+@WebMvcTest(controllers = SpectatorController.class)
+class SpectatorControllerTest {
 
     @MockBean
-    private AuditoriumService auditoriumService;
+    private SpectatorService spectatorService;
 
     @Autowired
-    private AuditoriumController controller;
+    private SpectatorController controller;
 
     @Autowired
     private MappingService mappingService;
@@ -52,7 +52,7 @@ public class AuditoriumControllerTest {
 
     private MockMvc mockMvc;
 
-    private final String AUDITORIUMS_PATH = "/auditoriums";
+    private final String SPECTATORS_PATH = "/spectators";
 
     @BeforeAll
     void setUp() {
@@ -62,12 +62,12 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void auditoriumShouldBeAdded() throws Exception {
-        Auditorium auditorium = mockService.getAuditorium();
-        when(auditoriumService.save(any(Auditorium.class))).thenReturn(auditorium);
-        AuditoriumDTO auditoriumDTO = mappingService.map(auditorium);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    void spectatorShouldBeAdded() throws Exception {
+        Spectator spectator = mockService.getSpectator();
+        when(spectatorService.save(any(Spectator.class))).thenReturn(spectator);
+        SpectatorDTO spectatorDTO = mappingService.map(spectator);
+        String body = objectMapper.writeValueAsString(spectatorDTO);
+        mockMvc.perform(post(SPECTATORS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
@@ -75,11 +75,11 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void savingWithoutNumberShouldReturn400Status() throws Exception {
-        AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
-        auditoriumDTO.setNumber(null);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    void savingWithoutNameShouldReturn400Status() throws Exception {
+        SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
+        spectatorDTO.setName(null);
+        String body = objectMapper.writeValueAsString(spectatorDTO);
+        mockMvc.perform(post(SPECTATORS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
@@ -87,10 +87,35 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void savingViolatedNumberShouldReturn400Status() throws Exception {
-        AuditoriumDTO auditoriumDTO = mappingService.map(new Auditorium(0, 5));
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    void savingWithoutEmailShouldReturn400Status() throws Exception {
+        SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
+        spectatorDTO.setEmail(null);
+        String body = objectMapper.writeValueAsString(spectatorDTO);
+        mockMvc.perform(post(SPECTATORS_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void savingWithoutPhoneNumberShouldReturn400Status() throws Exception {
+        SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
+        spectatorDTO.setPhoneNumber(null);
+        String body = objectMapper.writeValueAsString(spectatorDTO);
+        mockMvc.perform(post(SPECTATORS_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void savingViolatedEmailShouldReturn400Status() throws Exception {
+        SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
+        spectatorDTO.setEmail("somethingThatIsNotEmail");
+        String body = objectMapper.writeValueAsString(spectatorDTO);
+        mockMvc.perform(post(SPECTATORS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))

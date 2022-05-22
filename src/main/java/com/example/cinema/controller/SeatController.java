@@ -47,7 +47,7 @@ public class SeatController {
     // TODO: 4/16/2022 PUT/PATCH method
     @PutMapping("/{id}")
     public SeatDTO changeReservedState(@PathVariable Long id, @RequestBody SeatDTO seatDTO) {
-        Seat seat = service.changeReservedState(id, seatDTO.isReserved());
+        Seat seat = service.changeReservedState(id, seatDTO.getIsReserved());
         return mappingService.map(seat);
     }
 

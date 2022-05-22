@@ -75,38 +75,38 @@ public class MockService {
         Spectator spectator = new Spectator();
         spectator.setId(99L);
         spectator.setName("John");
-        spectator.setEmail("Smith");
+        spectator.setEmail("johnsmith@gmail.com");
         spectator.setPhoneNumber("123456789");
         return spectator;
     }
 
-    private void setAuditoriumDependencies() {
+    public void setAuditoriumDependencies() {
         auditorium.setSpectacles(List.of(spectacle));
         auditorium.setSeats(List.of(seat));
     }
 
-    private void setMovieDependencies() {
+    public void setMovieDependencies() {
         movie.setSpectacles(List.of(spectacle));
     }
 
-    private void setReservationDependencies() {
+    public void setReservationDependencies() {
         reservation.setSeat(seat);
         reservation.setSpectacle(spectacle);
         reservation.setSpectator(spectator);
     }
 
-    private void setSeatDependencies() {
+    public void setSeatDependencies() {
         seat.setAuditorium(auditorium);
         seat.setReservations(List.of(reservation));
     }
 
-    private void setSpectacleDependencies() {
+    public void setSpectacleDependencies() {
         spectacle.setAuditorium(auditorium);
         spectacle.setMovie(movie);
         spectacle.setReservations(List.of(reservation));
     }
 
-    private void setSpectatorDependencies() {
+    public void setSpectatorDependencies() {
         spectator.setReservations(List.of(reservation));
     }
 
