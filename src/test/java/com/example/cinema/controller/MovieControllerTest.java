@@ -78,6 +78,10 @@ class MovieControllerTest {
     void savingWithoutNameShouldReturn400Status() throws Exception {
         MovieDTO movieDTO = mappingService.map(mockService.getMovie());
         movieDTO.setName(null);
+        check400StatusForValidationException(movieDTO);
+    }
+
+    private void check400StatusForValidationException(MovieDTO movieDTO) throws Exception {
         String body = objectMapper.writeValueAsString(movieDTO);
         mockMvc.perform(post(MOVIES_PATH)
                         .contentType(MediaType.APPLICATION_JSON)

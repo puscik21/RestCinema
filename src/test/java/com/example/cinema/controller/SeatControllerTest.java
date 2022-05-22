@@ -78,42 +78,31 @@ class SeatControllerTest {
     void savingWithoutAuditoriumIdShouldReturn400Status() throws Exception {
         SeatDTO seatDTO = mappingService.map(mockService.getSeat());
         seatDTO.setAuditoriumId(null);
-        String body = objectMapper.writeValueAsString(seatDTO);
-        mockMvc.perform(post(SEATS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(seatDTO);
     }
 
     @Test
     void savingWithoutNumberShouldReturn400Status() throws Exception {
         SeatDTO seatDTO = mappingService.map(mockService.getSeat());
         seatDTO.setNumber(null);
-        String body = objectMapper.writeValueAsString(seatDTO);
-        mockMvc.perform(post(SEATS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(seatDTO);
     }
 
     @Test
     void savingWithoutIsReservedShouldReturn400Status() throws Exception {
         SeatDTO seatDTO = mappingService.map(mockService.getSeat());
         seatDTO.setIsReserved(null);
-        String body = objectMapper.writeValueAsString(seatDTO);
-        mockMvc.perform(post(SEATS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(seatDTO);
     }
 
     @Test
     void savingViolatedNumberShouldReturn400Status() throws Exception {
         SeatDTO seatDTO = mappingService.map(mockService.getSeat());
         seatDTO.setNumber(0);
+        check400StatusForValidationException(seatDTO);
+    }
+
+    private void check400StatusForValidationException(SeatDTO seatDTO) throws Exception {
         String body = objectMapper.writeValueAsString(seatDTO);
         mockMvc.perform(post(SEATS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)

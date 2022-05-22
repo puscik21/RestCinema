@@ -78,30 +78,24 @@ class ReservationControllerTest {
     void savingWithoutSpectacleIdShouldReturn400Status() throws Exception {
         ReservationDTO reservationDTO = mappingService.map(mockService.getReservation());
         reservationDTO.setSpectacleId(null);
-        String body = objectMapper.writeValueAsString(reservationDTO);
-        mockMvc.perform(post(RESERVATIONS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(reservationDTO);
     }
 
     @Test
     void savingWithoutSeatIdShouldReturn400Status() throws Exception {
         ReservationDTO reservationDTO = mappingService.map(mockService.getReservation());
         reservationDTO.setSeatId(null);
-        String body = objectMapper.writeValueAsString(reservationDTO);
-        mockMvc.perform(post(RESERVATIONS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(reservationDTO);
     }
 
     @Test
     void savingWithoutSpectatorIdShouldReturn400Status() throws Exception {
         ReservationDTO reservationDTO = mappingService.map(mockService.getReservation());
         reservationDTO.setSpectatorId(null);
+        check400StatusForValidationException(reservationDTO);
+    }
+
+    private void check400StatusForValidationException(ReservationDTO reservationDTO) throws Exception {
         String body = objectMapper.writeValueAsString(reservationDTO);
         mockMvc.perform(post(RESERVATIONS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)

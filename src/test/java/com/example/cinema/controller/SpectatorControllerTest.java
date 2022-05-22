@@ -78,42 +78,31 @@ class SpectatorControllerTest {
     void savingWithoutNameShouldReturn400Status() throws Exception {
         SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
         spectatorDTO.setName(null);
-        String body = objectMapper.writeValueAsString(spectatorDTO);
-        mockMvc.perform(post(SPECTATORS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(spectatorDTO);
     }
 
     @Test
     void savingWithoutEmailShouldReturn400Status() throws Exception {
         SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
         spectatorDTO.setEmail(null);
-        String body = objectMapper.writeValueAsString(spectatorDTO);
-        mockMvc.perform(post(SPECTATORS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(spectatorDTO);
     }
 
     @Test
     void savingWithoutPhoneNumberShouldReturn400Status() throws Exception {
         SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
         spectatorDTO.setPhoneNumber(null);
-        String body = objectMapper.writeValueAsString(spectatorDTO);
-        mockMvc.perform(post(SPECTATORS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(spectatorDTO);
     }
 
     @Test
     void savingViolatedEmailShouldReturn400Status() throws Exception {
         SpectatorDTO spectatorDTO = mappingService.map(mockService.getSpectator());
         spectatorDTO.setEmail("somethingThatIsNotEmail");
+        check400StatusForValidationException(spectatorDTO);
+    }
+
+    private void check400StatusForValidationException(SpectatorDTO spectatorDTO) throws Exception {
         String body = objectMapper.writeValueAsString(spectatorDTO);
         mockMvc.perform(post(SPECTATORS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)

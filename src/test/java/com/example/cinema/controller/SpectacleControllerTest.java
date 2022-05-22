@@ -78,30 +78,24 @@ class SpectacleControllerTest {
     void savingWithoutAuditoriumIdShouldReturn400Status() throws Exception {
         SpectacleDTO spectacleDTO = mappingService.map(mockService.getSpectacle());
         spectacleDTO.setAuditoriumId(null);
-        String body = objectMapper.writeValueAsString(spectacleDTO);
-        mockMvc.perform(post(SPECTACLES_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(spectacleDTO);
     }
 
     @Test
     void savingWithoutMovieIdShouldReturn400Status() throws Exception {
         SpectacleDTO spectacleDTO = mappingService.map(mockService.getSpectacle());
         spectacleDTO.setMovieId(null);
-        String body = objectMapper.writeValueAsString(spectacleDTO);
-        mockMvc.perform(post(SPECTACLES_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(spectacleDTO);
     }
 
     @Test
     void savingWithoutDateTimeShouldReturn400Status() throws Exception {
         SpectacleDTO spectacleDTO = mappingService.map(mockService.getSpectacle());
         spectacleDTO.setDateTime(null);
+        check400StatusForValidationException(spectacleDTO);
+    }
+
+    private void check400StatusForValidationException(SpectacleDTO spectacleDTO) throws Exception {
         String body = objectMapper.writeValueAsString(spectacleDTO);
         mockMvc.perform(post(SPECTACLES_PATH)
                         .contentType(MediaType.APPLICATION_JSON)

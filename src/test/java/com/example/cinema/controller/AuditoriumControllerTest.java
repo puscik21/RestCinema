@@ -78,17 +78,16 @@ public class AuditoriumControllerTest {
     void savingWithoutNumberShouldReturn400Status() throws Exception {
         AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
         auditoriumDTO.setNumber(null);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
-                .andExpect(status().isBadRequest());
+        check400StatusForValidationException(auditoriumDTO);
     }
 
     @Test
     void savingViolatedNumberShouldReturn400Status() throws Exception {
         AuditoriumDTO auditoriumDTO = mappingService.map(new Auditorium(0, 5));
+        check400StatusForValidationException(auditoriumDTO);
+    }
+
+    private void check400StatusForValidationException(AuditoriumDTO auditoriumDTO) throws Exception {
         String body = objectMapper.writeValueAsString(auditoriumDTO);
         mockMvc.perform(post(AUDITORIUMS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
