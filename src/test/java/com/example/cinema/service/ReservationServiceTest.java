@@ -7,6 +7,7 @@ import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -14,7 +15,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +58,15 @@ public class ReservationServiceTest {
     void getNotExistingShouldReturnException() {
         when(reservationRepository.findById(anyLong())).thenReturn(Optional.empty());
         assertThrows(RequestException.class, () -> reservationService.findByIdOrThrow(anyLong()));
+    }
+
+    @Test
+    public void reservationShouldBeSavedWithBasicConditions() {
+        when(seatService.findByIdOrThrow(anyLong())).thenReturn(mockService.getSeat());
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        Reservation reservation = reservationService.save(mockService.getReservation());
+        assertNull(reservation.getId());
+        assertTrue(reservation.getSeat().isReserved());
     }
 
     @Test

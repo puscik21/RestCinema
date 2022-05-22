@@ -6,14 +6,19 @@ import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SeatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -51,11 +56,12 @@ class SeatServiceTest {
     }
 
     @Test
-    public void reservationForReservedShouldReturnException() {
-        Seat seat = mockService.getSeat();
-        seat.setReserved(true);
-        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(seat));
-        assertThrows(RequestException.class, () -> seatService.changeReservedState(anyLong(), true));
+    public void seatShouldBeSavedWithBasicConditions() {
+        when(seatRepository.save(any(Seat.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        Seat seat = seatService.save(mockService.getSeat());
+        assertNull(seat.getId());
+        assertNull(seat.getAuditorium());
+        assertEquals(Collections.emptyList(), seat.getReservations());
     }
 
     @Test
@@ -77,4 +83,20 @@ class SeatServiceTest {
         assertEquals(String.format("Could not find auditorium with id: %s", seat.getAuditorium().getId()), e.getMessage());
     }
 
+    @Test
+    public void reservationStateShouldBeChanged() {
+        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
+        when(seatRepository.save(any(Seat.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        boolean newState = !mockService.getSeat().isReserved();
+        Seat seat = seatService.changeReservedState(anyLong(), newState);
+        assertEquals(newState, seat.isReserved());
+    }
+
+    @Test
+    public void reservationForReservedShouldReturnException() {
+        Seat seat = mockService.getSeat();
+        seat.setReserved(true);
+        when(seatRepository.findById(anyLong())).thenReturn(Optional.of(seat));
+        assertThrows(RequestException.class, () -> seatService.changeReservedState(anyLong(), true));
+    }
 }

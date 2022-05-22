@@ -6,14 +6,19 @@ import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.AuditoriumRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -45,6 +50,14 @@ public class AuditoriumServiceTest {
     public void getNotExistingShouldReturnException() {
         when(auditoriumRepository.findById(anyLong())).thenReturn(Optional.empty());
         assertThrows(RequestException.class, () -> auditoriumService.findByIdOrThrow(anyLong()));
+    }
+
+    @Test
+    public void auditoriumShouldBeSavedWithBasicConditions() {
+        when(auditoriumRepository.save(any(Auditorium.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        Auditorium auditorium = auditoriumService.save(mockService.getAuditorium());
+        assertNull(auditorium.getId());
+        assertEquals(Collections.emptyList(), auditorium.getSpectacles());
     }
 
     @Test
