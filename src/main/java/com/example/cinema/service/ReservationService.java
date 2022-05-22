@@ -31,10 +31,10 @@ public class ReservationService {
         return repository.findById(id);
     }
 
-    public Reservation addReservation(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         checkIfDependenciesExist(reservation);
         Seat seat = seatService.findByIdOrThrow(reservation.getSeat().getId());
-        checkIfSeatIsReserved(seat);
+        checkIfIsReserved(seat);
         seat.setReserved(true);
         reservation.setId(null);
         return repository.save(reservation);
@@ -45,7 +45,7 @@ public class ReservationService {
         spectatorService.findByIdOrThrow(reservation.getSpectator().getId());
     }
 
-    private void checkIfSeatIsReserved(Seat seat) {
+    private void checkIfIsReserved(Seat seat) {
         if (seat.isReserved()) {
             throw new RequestException(String.format("Seat with number %s is already reserved", seat.getNumber()));
         }

@@ -27,20 +27,20 @@ public class SeatController {
     private final MappingService mappingService;
 
     @GetMapping
-    public List<SeatDTO> getAllSeats() {
+    public List<SeatDTO> findAll() {
         return service.findAll().stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public SeatDTO getSeatById(@PathVariable Long id) {
+    public SeatDTO getById(@PathVariable Long id) {
         return mappingService.map(service.findByIdOrThrow(id));
     }
 
     @PostMapping
-    public SeatDTO addSeat(@RequestBody @Valid SeatDTO seatDTO) {
-        Seat seat = service.addSeat(mappingService.map(seatDTO));
+    public SeatDTO save(@RequestBody @Valid SeatDTO seatDTO) {
+        Seat seat = service.save(mappingService.map(seatDTO));
         return mappingService.map(seat);
     }
 
@@ -52,8 +52,8 @@ public class SeatController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteSeat(@PathVariable Long id) {
-        service.deleteSeat(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "Seat was deleted";
     }
 }

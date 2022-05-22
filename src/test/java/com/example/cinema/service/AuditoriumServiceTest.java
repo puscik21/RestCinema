@@ -51,6 +51,6 @@ public class AuditoriumServiceTest {
     public void addExistingNumberShouldReturnException() {
         Auditorium auditorium = mockService.getAuditorium();
         when(auditoriumRepository.findByNumber(anyInt())).thenReturn(Optional.of(auditorium));
-        assertThrows(RequestException.class, () -> auditoriumService.addAuditorium(auditorium));
+        assertThrows(RequestException.class, () -> auditoriumService.save(auditorium));
     }
 }

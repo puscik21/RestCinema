@@ -29,9 +29,9 @@ public class SeatService {
         return repository.findById(id);
     }
 
-    public Seat addSeat(Seat seat) {
+    public Seat save(Seat seat) {
         Auditorium auditorium = auditoriumService.findByIdOrThrow(seat.getAuditorium().getId());
-        if (repository.findSeatByNumber(seat.getNumber()).isPresent()) {
+        if (repository.findByNumber(seat.getNumber()).isPresent()) {
             throw new RequestException(String.format("Seat with number %s already exists in auditorium number %s",
                     seat.getNumber(), auditorium.getNumber()));
         }
@@ -41,7 +41,7 @@ public class SeatService {
         return repository.save(seat);
     }
 
-    public void deleteSeat(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 

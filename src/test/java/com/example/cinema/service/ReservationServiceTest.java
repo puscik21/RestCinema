@@ -61,7 +61,7 @@ public class ReservationServiceTest {
         Reservation reservation = mockService.getReservation();
         when(spectacleService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find spectacle with id:  %s",
                 reservation.getSpectacle().getId())));
-        Exception e = assertThrows(RequestException.class, () -> reservationService.addReservation(reservation));
+        Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Could not find spectacle with id:  %s", reservation.getSpectacle().getId()), e.getMessage());
     }
 
@@ -70,7 +70,7 @@ public class ReservationServiceTest {
         Reservation reservation = mockService.getReservation();
         when(spectatorService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find spectator with id:  %s"
                 , reservation.getSpectator().getId())));
-        Exception e = assertThrows(RequestException.class, () -> reservationService.addReservation(reservation));
+        Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Could not find spectator with id:  %s", reservation.getSpectator().getId()), e.getMessage());
     }
 
@@ -79,7 +79,7 @@ public class ReservationServiceTest {
         Reservation reservation = mockService.getReservation();
         when(seatService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find seat with id: %s",
                 reservation.getSeat().getId())));
-        Exception e = assertThrows(RequestException.class, () -> reservationService.addReservation(reservation));
+        Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Could not find seat with id: %s", reservation.getSeat().getId()), e.getMessage());
     }
 
@@ -89,7 +89,7 @@ public class ReservationServiceTest {
         Seat seat = mockService.getSeat();
         seat.setReserved(true);
         when(seatService.findByIdOrThrow(anyLong())).thenReturn(seat);
-        Exception e = assertThrows(RequestException.class, () -> reservationService.addReservation(reservation));
+        Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Seat with number %s is already reserved", reservation.getSeat().getNumber()), e.getMessage());
     }
 }

@@ -51,6 +51,6 @@ public class SpectatorServiceTest {
     public void addExistingEmailShouldReturnException() {
         Spectator spectator = mockService.getSpectator();
         when(spectatorRepository.findByEmail(anyString())).thenReturn(Optional.of(spectator));
-        assertThrows(RequestException.class, () -> spectatorService.addSpectator(spectator));
+        assertThrows(RequestException.class, () -> spectatorService.save(spectator));
     }
 }

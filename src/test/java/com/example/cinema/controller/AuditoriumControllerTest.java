@@ -61,7 +61,7 @@ public class AuditoriumControllerTest {
 
     @Test
     void auditoriumShouldBeAdded() throws Exception {
-        Mockito.when(auditoriumService.addAuditorium(Mockito.any(Auditorium.class))).thenReturn(mockService.getAuditorium());
+        Mockito.when(auditoriumService.save(Mockito.any(Auditorium.class))).thenReturn(mockService.getAuditorium());
         AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
         String body = objectMapper.writeValueAsString(auditoriumDTO);
         mockMvc.perform(post(AUDITORIUMS_PATH)

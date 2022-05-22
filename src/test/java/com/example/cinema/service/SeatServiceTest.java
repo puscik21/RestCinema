@@ -62,8 +62,8 @@ class SeatServiceTest {
     public void addExistingNumberInAuditoriumShouldReturnException() {
         Seat seat = mockService.getSeat();
         when(auditoriumService.findByIdOrThrow(anyLong())).thenReturn(mockService.getAuditorium());
-        when(seatRepository.findSeatByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
-        Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
+        when(seatRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
+        Exception e = assertThrows(RequestException.class, () -> seatService.save(seat));
         assertEquals(String.format("Seat with number %s already exists in auditorium number %s",
                 seat.getNumber(), seat.getAuditorium().getNumber()), e.getMessage());
     }
@@ -73,7 +73,7 @@ class SeatServiceTest {
         Seat seat = mockService.getSeat();
         when(auditoriumService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find auditorium with id: %s",
                 seat.getAuditorium().getId())));
-        Exception e = assertThrows(RequestException.class, () -> seatService.addSeat(seat));
+        Exception e = assertThrows(RequestException.class, () -> seatService.save(seat));
         assertEquals(String.format("Could not find auditorium with id: %s", seat.getAuditorium().getId()), e.getMessage());
     }
 
