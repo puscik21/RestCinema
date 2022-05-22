@@ -8,6 +8,7 @@ import com.example.cinema.repository.ReservationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -36,6 +37,7 @@ public class ReservationServiceTest {
     @Mock
     private SeatService seatService;
 
+    @InjectMocks
     private ReservationService reservationService;
 
     private final MockService mockService = new MockService();
@@ -43,7 +45,6 @@ public class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        reservationService = new ReservationService(reservationRepository, spectacleService, spectatorService, seatService);
     }
 
     @Test

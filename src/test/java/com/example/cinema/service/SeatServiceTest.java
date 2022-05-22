@@ -7,6 +7,7 @@ import com.example.cinema.repository.SeatRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -31,6 +32,7 @@ class SeatServiceTest {
     @Mock
     private AuditoriumService auditoriumService;
 
+    @InjectMocks
     private SeatService seatService;
 
     private final MockService mockService = new MockService();
@@ -38,7 +40,6 @@ class SeatServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        seatService = new SeatService(seatRepository, auditoriumService);
     }
 
     @Test

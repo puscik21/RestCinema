@@ -7,6 +7,7 @@ import com.example.cinema.repository.SpectacleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -27,6 +28,7 @@ public class SpectacleServiceTest {
     @Mock
     private SpectacleRepository spectacleRepository;
 
+    @InjectMocks
     private SpectacleService spectacleService;
 
     private final MockService mockService = new MockService();
@@ -34,7 +36,6 @@ public class SpectacleServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        spectacleService = new SpectacleService(spectacleRepository);
     }
 
     @Test
