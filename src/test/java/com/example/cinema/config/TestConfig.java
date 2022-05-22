@@ -1,5 +1,6 @@
 package com.example.cinema.config;
 
+import com.example.cinema.MockService;
 import com.example.cinema.service.MappingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.TestConfiguration;

@@ -1,6 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.config.MockService;
+import com.example.cinema.MockService;
 import com.example.cinema.entity.Spectacle;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectacleRepository;

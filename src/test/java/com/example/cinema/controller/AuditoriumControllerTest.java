@@ -1,6 +1,6 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.config.MockService;
+import com.example.cinema.MockService;
 import com.example.cinema.config.TestConfig;
 import com.example.cinema.dto.AuditoriumDTO;
 import com.example.cinema.entity.Auditorium;
@@ -54,7 +54,6 @@ public class AuditoriumControllerTest {
 
     @BeforeAll
     void setUp() {
-        Mockito.when(auditoriumService.addAuditorium(Mockito.any(Auditorium.class))).thenReturn(mockService.getAuditorium());
         mockMvc = MockMvcBuilders.standaloneSetup(auditoriumController)
                 .setControllerAdvice(requestExceptionHandler)
                 .build();
@@ -62,13 +61,14 @@ public class AuditoriumControllerTest {
 
     @Test
     void auditoriumShouldBeAdded() throws Exception {
+        Mockito.when(auditoriumService.addAuditorium(Mockito.any(Auditorium.class))).thenReturn(mockService.getAuditorium());
         AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
         String body = objectMapper.writeValueAsString(auditoriumDTO);
         mockMvc.perform(post(AUDITORIUMS_PATH)
                         .contentType("application/json")
                         .content(body))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(auditoriumDTO)));
+                .andExpect(content().json(body));
     }
 
     @Test

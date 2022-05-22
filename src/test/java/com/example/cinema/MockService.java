@@ -1,4 +1,4 @@
-package com.example.cinema.config;
+package com.example.cinema;
 
 import com.example.cinema.entity.Auditorium;
 import com.example.cinema.entity.Movie;
