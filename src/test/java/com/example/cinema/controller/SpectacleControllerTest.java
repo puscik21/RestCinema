@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -84,6 +85,19 @@ class SpectacleControllerTest {
         return spectacles.stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
+    }
+
+    @Test
+    void shouldFindById() throws Exception {
+        Spectacle spectacle = mockService.getSpectacle();
+        when(spectacleService.findByIdOrThrow(anyLong())).thenReturn(spectacle);
+        SpectacleDTO spectacleDTO = mappingService.map(spectacle);
+        String body = objectMapper.writeValueAsString(spectacleDTO);
+        mockMvc.perform(get(SPECTACLES_PATH + "/0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk())
+                .andExpect(content().json(body));
     }
 
     @Test

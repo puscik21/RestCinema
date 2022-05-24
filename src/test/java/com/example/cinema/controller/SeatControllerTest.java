@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -84,6 +85,19 @@ class SeatControllerTest {
         return seats.stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
+    }
+
+    @Test
+    void shouldFindById() throws Exception {
+        Seat seat = mockService.getSeat();
+        when(seatService.findByIdOrThrow(anyLong())).thenReturn(seat);
+        SeatDTO seatDTO = mappingService.map(seat);
+        String body = objectMapper.writeValueAsString(seatDTO);
+        mockMvc.perform(get(SEATS_PATH + "/0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk())
+                .andExpect(content().json(body));
     }
 
     @Test

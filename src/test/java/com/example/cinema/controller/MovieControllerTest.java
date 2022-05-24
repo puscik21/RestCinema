@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -84,6 +85,19 @@ class MovieControllerTest {
         return movies.stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
+    }
+
+    @Test
+    void shouldFindById() throws Exception {
+        Movie movie = mockService.getMovie();
+        when(movieService.findByIdOrThrow(anyLong())).thenReturn(movie);
+        MovieDTO movieDTO = mappingService.map(movie);
+        String body = objectMapper.writeValueAsString(movieDTO);
+        mockMvc.perform(get(MOVIES_PATH + "/0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk())
+                .andExpect(content().json(body));
     }
 
     @Test
