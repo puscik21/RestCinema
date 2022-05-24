@@ -27,7 +27,7 @@ public class AuditoriumService {
         return repository.findById(id);
     }
 
-    public Auditorium addAuditorium(Auditorium auditorium) {
+    public Auditorium save(Auditorium auditorium) {
         if (repository.findByNumber(auditorium.getNumber()).isPresent()) {
             throw new RequestException(String.format("Auditorium with number %s already exists", auditorium.getNumber()));
         }

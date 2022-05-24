@@ -25,20 +25,20 @@ public class AuditoriumController {
     private final MappingService mappingService;
 
     @GetMapping
-    public List<AuditoriumDTO> getAllAuditoriums() {
+    public List<AuditoriumDTO> findAll() {
         return service.findAll().stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public AuditoriumDTO getSeatById(@PathVariable Long id) {
+    public AuditoriumDTO getById(@PathVariable Long id) {
         return mappingService.map(service.findByIdOrThrow(id));
     }
 
     @PostMapping
-    public AuditoriumDTO addAuditorium(@RequestBody @Valid AuditoriumDTO auditoriumDTO) {
-        Auditorium auditorium = service.addAuditorium(mappingService.map(auditoriumDTO));
+    public AuditoriumDTO save(@RequestBody @Valid AuditoriumDTO auditoriumDTO) {
+        Auditorium auditorium = service.save(mappingService.map(auditoriumDTO));
         return mappingService.map(auditorium);
     }
 }

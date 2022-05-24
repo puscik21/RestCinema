@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,11 +29,4 @@ public class Spectator {
     @Column(unique = true)
     private String email;
     private String phoneNumber;
-
-    public Spectator(String name, String email, String phoneNumber) {
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.reservations = new ArrayList<>();
-    }
 }

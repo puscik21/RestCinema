@@ -29,10 +29,4 @@ public class Reservation {
 
     @ManyToOne
     private Spectator spectator;
-
-    public Reservation(Spectacle spectacle, Seat seat, Spectator spectator) {
-        this.spectacle = spectacle;
-        this.seat = seat;
-        this.spectator = spectator;
-    }
 }

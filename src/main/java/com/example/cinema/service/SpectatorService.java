@@ -27,7 +27,7 @@ public class SpectatorService {
         return repository.findById(id);
     }
 
-    public Spectator addSpectator(Spectator spectator) {
+    public Spectator save(Spectator spectator) {
         if (repository.findByEmail(spectator.getEmail()).isPresent()){
             throw new RequestException(String.format("Spectator with email %s already exists", spectator.getEmail()));
         }
@@ -36,7 +36,7 @@ public class SpectatorService {
         return repository.save(spectator);
     }
 
-    public void deleteSpectator(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

@@ -25,20 +25,20 @@ public class SpectacleController {
     private final MappingService mappingService;
 
     @GetMapping
-    public List<SpectacleDTO> getAllSpectacles() {
+    public List<SpectacleDTO> findAll() {
         return service.findAll().stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public SpectacleDTO getSeatById(@PathVariable Long id) {
+    public SpectacleDTO getById(@PathVariable Long id) {
         return mappingService.map(service.findByIdOrThrow(id));
     }
 
     @PostMapping
-    public SpectacleDTO addSpectacle(@RequestBody @Valid SpectacleDTO spectacleDTO) {
-        Spectacle spectacle = service.addSpectacle(mappingService.map(spectacleDTO));
+    public SpectacleDTO save(@RequestBody @Valid SpectacleDTO spectacleDTO) {
+        Spectacle spectacle = service.save(mappingService.map(spectacleDTO));
         return mappingService.map(spectacle);
     }
 }

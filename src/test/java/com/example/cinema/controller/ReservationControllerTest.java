@@ -2,11 +2,11 @@ package com.example.cinema.controller;
 
 import com.example.cinema.MockService;
 import com.example.cinema.config.TestConfig;
-import com.example.cinema.dto.AuditoriumDTO;
-import com.example.cinema.entity.Auditorium;
+import com.example.cinema.dto.ReservationDTO;
+import com.example.cinema.entity.Reservation;
 import com.example.cinema.exception.RequestExceptionHandler;
-import com.example.cinema.service.AuditoriumService;
 import com.example.cinema.service.MappingService;
+import com.example.cinema.service.ReservationService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,14 +37,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(TestConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WebMvcTest(controllers = AuditoriumController.class)
-public class AuditoriumControllerTest {
+@WebMvcTest(controllers = ReservationController.class)
+class ReservationControllerTest {
 
     @MockBean
-    private AuditoriumService auditoriumService;
+    private ReservationService reservationService;
 
     @Autowired
-    private AuditoriumController controller;
+    private ReservationController controller;
 
     @Autowired
     private MappingService mappingService;
@@ -60,7 +60,7 @@ public class AuditoriumControllerTest {
 
     private MockMvc mockMvc;
 
-    private final String AUDITORIUMS_PATH = "/auditoriums";
+    private final String RESERVATIONS_PATH = "/reservations";
 
     @BeforeAll
     void setUp() {
@@ -71,29 +71,29 @@ public class AuditoriumControllerTest {
 
     @Test
     void shouldFindAll() throws Exception {
-        List<Auditorium> mockedAuditoriums = mockService.prepareAuditoriumsList();
-        when(auditoriumService.findAll()).thenReturn(mockedAuditoriums);
-        List<AuditoriumDTO> expected = mapToDto(mockedAuditoriums);
-        MvcResult result = mockMvc.perform(get(AUDITORIUMS_PATH))
+        List<Reservation> mockedReservations = mockService.prepareReservationsList();
+        when(reservationService.findAll()).thenReturn(mockedReservations);
+        List<ReservationDTO> expected = mapToDto(mockedReservations);
+        MvcResult result = mockMvc.perform(get(RESERVATIONS_PATH))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<AuditoriumDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        List<ReservationDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
-    private List<AuditoriumDTO> mapToDto(List<Auditorium> auditoriums) {
-        return auditoriums.stream()
+    private List<ReservationDTO> mapToDto(List<Reservation> reservations) {
+        return reservations.stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @Test
     void shouldFindById() throws Exception {
-        Auditorium auditorium = mockService.getAuditorium();
-        when(auditoriumService.findByIdOrThrow(anyLong())).thenReturn(auditorium);
-        AuditoriumDTO auditoriumDTO = mappingService.map(auditorium);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(get(AUDITORIUMS_PATH + "/0")
+        Reservation reservation = mockService.getReservation();
+        when(reservationService.findByIdOrThrow(anyLong())).thenReturn(reservation);
+        ReservationDTO reservationDTO = mappingService.map(reservation);
+        String body = objectMapper.writeValueAsString(reservationDTO);
+        mockMvc.perform(get(RESERVATIONS_PATH + "/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
@@ -101,12 +101,12 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void auditoriumShouldBeAdded() throws Exception {
-        Auditorium auditorium = mockService.getAuditorium();
-        when(auditoriumService.save(any(Auditorium.class))).thenReturn(auditorium);
-        AuditoriumDTO auditoriumDTO = mappingService.map(auditorium);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    void reservationShouldBeAdded() throws Exception {
+        Reservation reservation = mockService.getReservation();
+        when(reservationService.save(any(Reservation.class))).thenReturn(reservation);
+        ReservationDTO reservationDTO = mappingService.map(reservation);
+        String body = objectMapper.writeValueAsString(reservationDTO);
+        mockMvc.perform(post(RESERVATIONS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
@@ -114,21 +114,29 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void savingWithoutNumberShouldReturn400Status() throws Exception {
-        AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
-        auditoriumDTO.setNumber(null);
-        check400StatusForValidationException(auditoriumDTO);
+    void savingWithoutSpectacleIdShouldReturn400Status() throws Exception {
+        ReservationDTO reservationDTO = mappingService.map(mockService.getReservation());
+        reservationDTO.setSpectacleId(null);
+        check400StatusForValidationException(reservationDTO);
     }
 
     @Test
-    void savingViolatedNumberShouldReturn400Status() throws Exception {
-        AuditoriumDTO auditoriumDTO = mappingService.map(new Auditorium(0, 5));
-        check400StatusForValidationException(auditoriumDTO);
+    void savingWithoutSeatIdShouldReturn400Status() throws Exception {
+        ReservationDTO reservationDTO = mappingService.map(mockService.getReservation());
+        reservationDTO.setSeatId(null);
+        check400StatusForValidationException(reservationDTO);
     }
 
-    private void check400StatusForValidationException(AuditoriumDTO auditoriumDTO) throws Exception {
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    @Test
+    void savingWithoutSpectatorIdShouldReturn400Status() throws Exception {
+        ReservationDTO reservationDTO = mappingService.map(mockService.getReservation());
+        reservationDTO.setSpectatorId(null);
+        check400StatusForValidationException(reservationDTO);
+    }
+
+    private void check400StatusForValidationException(ReservationDTO reservationDTO) throws Exception {
+        String body = objectMapper.writeValueAsString(reservationDTO);
+        mockMvc.perform(post(RESERVATIONS_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))

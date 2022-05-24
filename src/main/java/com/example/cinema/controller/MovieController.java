@@ -25,20 +25,20 @@ public class MovieController {
     private final MappingService mappingService;
 
     @GetMapping
-    public List<MovieDTO> getAllMovies() {
+    public List<MovieDTO> findAll() {
         return service.findAll().stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public MovieDTO getSeatById(@PathVariable Long id) {
+    public MovieDTO getById(@PathVariable Long id) {
         return mappingService.map(service.findByIdOrThrow(id));
     }
 
     @PostMapping
-    public MovieDTO addMovie(@RequestBody @Valid MovieDTO movieDTO) {
-        Movie movie = service.addMovie(mappingService.map(movieDTO));
+    public MovieDTO save(@RequestBody @Valid MovieDTO movieDTO) {
+        Movie movie = service.save(mappingService.map(movieDTO));
         return mappingService.map(movie);
     }
 }

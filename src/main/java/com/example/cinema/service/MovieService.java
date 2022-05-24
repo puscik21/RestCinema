@@ -27,13 +27,13 @@ public class MovieService {
         return repository.findById(id);
     }
 
-    public Movie addMovie(Movie movie) {
+    public Movie save(Movie movie) {
         movie.setId(null);
         movie.setSpectacles(Collections.emptyList());
         return repository.save(movie);
     }
 
-    public void deleteMovie(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

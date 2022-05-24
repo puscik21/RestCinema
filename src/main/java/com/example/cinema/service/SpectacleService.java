@@ -33,14 +33,14 @@ public class SpectacleService {
         return repository.findById(id);
     }
 
-    public Spectacle addSpectacle(Spectacle spectacle) {
+    public Spectacle save(Spectacle spectacle) {
         spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // TODO: 4/16/2022 @Valid for date
         spectacle.setId(null);
         spectacle.setReservations(Collections.emptyList());
         return repository.save(spectacle);
     }
 
-    public void deleteSpectacle(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

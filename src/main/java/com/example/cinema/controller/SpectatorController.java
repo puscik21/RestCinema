@@ -25,20 +25,20 @@ public class SpectatorController {
     private final MappingService mappingService;
 
     @GetMapping
-    public List<SpectatorDTO> getAllSpectators() {
+    public List<SpectatorDTO> findAll() {
         return service.findAll().stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public SpectatorDTO getSeatById(@PathVariable Long id) {
+    public SpectatorDTO getById(@PathVariable Long id) {
         return mappingService.map(service.findByIdOrThrow(id));
     }
 
     @PostMapping
-    public SpectatorDTO addSpectator(@RequestBody @Valid SpectatorDTO spectatorDTO) {
-        Spectator spectator = service.addSpectator(mappingService.map(spectatorDTO));
+    public SpectatorDTO save(@RequestBody @Valid SpectatorDTO spectatorDTO) {
+        Spectator spectator = service.save(mappingService.map(spectatorDTO));
         return mappingService.map(spectator);
     }
 }

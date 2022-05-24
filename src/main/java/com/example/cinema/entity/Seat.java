@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,10 +29,4 @@ public class Seat {
     private List<Reservation> reservations;
     private int number;
     private boolean isReserved = false;
-
-    public Seat(int number) {
-        this.number = number;
-        this.isReserved = false;
-        this.reservations = new ArrayList<>();
-    }
 }

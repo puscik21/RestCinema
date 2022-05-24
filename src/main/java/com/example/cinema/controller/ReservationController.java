@@ -25,20 +25,20 @@ public class ReservationController {
     private final MappingService mappingService;
 
     @GetMapping
-    public List<ReservationDTO> getAllReservations() {
+    public List<ReservationDTO> findAll() {
         return service.findAll().stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ReservationDTO getSeatById(@PathVariable Long id) {
+    public ReservationDTO getById(@PathVariable Long id) {
         return mappingService.map(service.findByIdOrThrow(id));
     }
 
     @PostMapping
-    public ReservationDTO addReservation(@RequestBody @Valid ReservationDTO reservationDTO) {
-        Reservation reservation = service.addReservation(mappingService.map(reservationDTO));
+    public ReservationDTO save(@RequestBody @Valid ReservationDTO reservationDTO) {
+        Reservation reservation = service.save(mappingService.map(reservationDTO));
         return mappingService.map(reservation);
     }
 }

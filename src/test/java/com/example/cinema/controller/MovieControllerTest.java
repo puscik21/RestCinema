@@ -2,11 +2,11 @@ package com.example.cinema.controller;
 
 import com.example.cinema.MockService;
 import com.example.cinema.config.TestConfig;
-import com.example.cinema.dto.AuditoriumDTO;
-import com.example.cinema.entity.Auditorium;
+import com.example.cinema.dto.MovieDTO;
+import com.example.cinema.entity.Movie;
 import com.example.cinema.exception.RequestExceptionHandler;
-import com.example.cinema.service.AuditoriumService;
 import com.example.cinema.service.MappingService;
+import com.example.cinema.service.MovieService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,14 +37,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(TestConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WebMvcTest(controllers = AuditoriumController.class)
-public class AuditoriumControllerTest {
+@WebMvcTest(controllers = MovieController.class)
+class MovieControllerTest {
 
     @MockBean
-    private AuditoriumService auditoriumService;
+    private MovieService movieService;
 
     @Autowired
-    private AuditoriumController controller;
+    private MovieController controller;
 
     @Autowired
     private MappingService mappingService;
@@ -60,7 +60,7 @@ public class AuditoriumControllerTest {
 
     private MockMvc mockMvc;
 
-    private final String AUDITORIUMS_PATH = "/auditoriums";
+    private final String MOVIES_PATH = "/movies";
 
     @BeforeAll
     void setUp() {
@@ -71,29 +71,29 @@ public class AuditoriumControllerTest {
 
     @Test
     void shouldFindAll() throws Exception {
-        List<Auditorium> mockedAuditoriums = mockService.prepareAuditoriumsList();
-        when(auditoriumService.findAll()).thenReturn(mockedAuditoriums);
-        List<AuditoriumDTO> expected = mapToDto(mockedAuditoriums);
-        MvcResult result = mockMvc.perform(get(AUDITORIUMS_PATH))
+        List<Movie> mockedMovies = mockService.prepareMoviesList();
+        when(movieService.findAll()).thenReturn(mockedMovies);
+        List<MovieDTO> expected = mapToDto(mockedMovies);
+        MvcResult result = mockMvc.perform(get(MOVIES_PATH))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<AuditoriumDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        List<MovieDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
-    private List<AuditoriumDTO> mapToDto(List<Auditorium> auditoriums) {
-        return auditoriums.stream()
+    private List<MovieDTO> mapToDto(List<Movie> movies) {
+        return movies.stream()
                 .map(mappingService::map)
                 .collect(Collectors.toList());
     }
 
     @Test
     void shouldFindById() throws Exception {
-        Auditorium auditorium = mockService.getAuditorium();
-        when(auditoriumService.findByIdOrThrow(anyLong())).thenReturn(auditorium);
-        AuditoriumDTO auditoriumDTO = mappingService.map(auditorium);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(get(AUDITORIUMS_PATH + "/0")
+        Movie movie = mockService.getMovie();
+        when(movieService.findByIdOrThrow(anyLong())).thenReturn(movie);
+        MovieDTO movieDTO = mappingService.map(movie);
+        String body = objectMapper.writeValueAsString(movieDTO);
+        mockMvc.perform(get(MOVIES_PATH + "/0")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
@@ -101,12 +101,12 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void auditoriumShouldBeAdded() throws Exception {
-        Auditorium auditorium = mockService.getAuditorium();
-        when(auditoriumService.save(any(Auditorium.class))).thenReturn(auditorium);
-        AuditoriumDTO auditoriumDTO = mappingService.map(auditorium);
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    void movieShouldBeAdded() throws Exception {
+        Movie movie = mockService.getMovie();
+        when(movieService.save(any(Movie.class))).thenReturn(movie);
+        MovieDTO movieDTO = mappingService.map(movie);
+        String body = objectMapper.writeValueAsString(movieDTO);
+        mockMvc.perform(post(MOVIES_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
@@ -114,21 +114,15 @@ public class AuditoriumControllerTest {
     }
 
     @Test
-    void savingWithoutNumberShouldReturn400Status() throws Exception {
-        AuditoriumDTO auditoriumDTO = mappingService.map(mockService.getAuditorium());
-        auditoriumDTO.setNumber(null);
-        check400StatusForValidationException(auditoriumDTO);
+    void savingWithoutNameShouldReturn400Status() throws Exception {
+        MovieDTO movieDTO = mappingService.map(mockService.getMovie());
+        movieDTO.setName(null);
+        check400StatusForValidationException(movieDTO);
     }
 
-    @Test
-    void savingViolatedNumberShouldReturn400Status() throws Exception {
-        AuditoriumDTO auditoriumDTO = mappingService.map(new Auditorium(0, 5));
-        check400StatusForValidationException(auditoriumDTO);
-    }
-
-    private void check400StatusForValidationException(AuditoriumDTO auditoriumDTO) throws Exception {
-        String body = objectMapper.writeValueAsString(auditoriumDTO);
-        mockMvc.perform(post(AUDITORIUMS_PATH)
+    private void check400StatusForValidationException(MovieDTO movieDTO) throws Exception {
+        String body = objectMapper.writeValueAsString(movieDTO);
+        mockMvc.perform(post(MOVIES_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException))
