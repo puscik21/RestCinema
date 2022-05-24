@@ -7,6 +7,7 @@ import com.example.cinema.entity.Movie;
 import com.example.cinema.exception.RequestExceptionHandler;
 import com.example.cinema.service.MappingService;
 import com.example.cinema.service.MovieService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,14 +69,32 @@ class MovieControllerTest {
     }
 
     @Test
+    void shouldFindAll() throws Exception {
+        List<Movie> mockedMovies = mockService.prepareMoviesList();
+        when(movieService.findAll()).thenReturn(mockedMovies);
+        List<MovieDTO> expected = mapToDto(mockedMovies);
+        MvcResult result = mockMvc.perform(get(MOVIES_PATH))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<MovieDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    private List<MovieDTO> mapToDto(List<Movie> movies) {
+        return movies.stream()
+                .map(mappingService::map)
+                .collect(Collectors.toList());
+    }
+
+    @Test
     void movieShouldBeAdded() throws Exception {
         Movie movie = mockService.getMovie();
         when(movieService.save(any(Movie.class))).thenReturn(movie);
         MovieDTO movieDTO = mappingService.map(movie);
         String body = objectMapper.writeValueAsString(movieDTO);
         mockMvc.perform(post(MOVIES_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
                 .andExpect(status().isOk())
                 .andExpect(content().json(body));
     }

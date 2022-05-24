@@ -133,4 +133,28 @@ public class MockService {
     public Spectator getSpectator() {
         return spectator;
     }
+
+    public List<Auditorium> prepareAuditoriumsList() {
+        return List.of(prepareAuditorium(), prepareAuditorium());
+    }
+
+    public List<Movie> prepareMoviesList() {
+        return List.of(prepareMovie(), prepareMovie());
+    }
+
+    public List<Reservation> prepareReservationsList() {
+        return List.of(prepareReservation(), prepareReservation());
+    }
+
+    public List<Seat> prepareSeatsList() {
+        return List.of(prepareSeat(), prepareSeat());
+    }
+
+    public List<Spectacle> prepareSpectaclesList() {
+        return List.of(prepareSpectacle(), prepareSpectacle());
+    }
+
+    public List<Spectator> prepareSpectatorsList() {
+        return List.of(prepareSpectator(), prepareSpectator());
+    }
 }

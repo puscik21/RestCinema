@@ -7,6 +7,7 @@ import com.example.cinema.entity.Seat;
 import com.example.cinema.exception.RequestExceptionHandler;
 import com.example.cinema.service.MappingService;
 import com.example.cinema.service.SeatService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,6 +66,24 @@ class SeatControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(requestExceptionHandler)
                 .build();
+    }
+
+    @Test
+    void shouldFindAll() throws Exception {
+        List<Seat> mockedSeats = mockService.prepareSeatsList();
+        when(seatService.findAll()).thenReturn(mockedSeats);
+        List<SeatDTO> expected = mapToDto(mockedSeats);
+        MvcResult result = mockMvc.perform(get(SEATS_PATH))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<SeatDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    private List<SeatDTO> mapToDto(List<Seat> seats) {
+        return seats.stream()
+                .map(mappingService::map)
+                .collect(Collectors.toList());
     }
 
     @Test

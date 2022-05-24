@@ -7,6 +7,7 @@ import com.example.cinema.entity.Reservation;
 import com.example.cinema.exception.RequestExceptionHandler;
 import com.example.cinema.service.MappingService;
 import com.example.cinema.service.ReservationService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,6 +66,24 @@ class ReservationControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(requestExceptionHandler)
                 .build();
+    }
+
+    @Test
+    void shouldFindAll() throws Exception {
+        List<Reservation> mockedReservations = mockService.prepareReservationsList();
+        when(reservationService.findAll()).thenReturn(mockedReservations);
+        List<ReservationDTO> expected = mapToDto(mockedReservations);
+        MvcResult result = mockMvc.perform(get(RESERVATIONS_PATH))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<ReservationDTO> actual = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    private List<ReservationDTO> mapToDto(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(mappingService::map)
+                .collect(Collectors.toList());
     }
 
     @Test
