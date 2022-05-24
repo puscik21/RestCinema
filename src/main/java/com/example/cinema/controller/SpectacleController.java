@@ -5,6 +5,7 @@ import com.example.cinema.entity.Spectacle;
 import com.example.cinema.service.MappingService;
 import com.example.cinema.service.SpectacleService;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,5 +42,10 @@ public class SpectacleController {
     public SpectacleDTO save(@RequestBody @Valid SpectacleDTO spectacleDTO) {
         Spectacle spectacle = service.save(mappingService.map(spectacleDTO));
         return mappingService.map(spectacle);
+    }
+
+    @DeleteMapping("/{id}")
+    public Map<String, String> deleteById(@PathVariable Long id) {
+        return service.deleteById(id);
     }
 }

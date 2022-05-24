@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,7 +37,8 @@ public class SpectatorService {
         return repository.save(spectator);
     }
 
-    public void delete(Long id) {
+    public Map<String, String> deleteById(Long id) {
         repository.deleteById(id);
+        return Map.of("message", String.format("Spectator with id: %s has been removed", id));
     }
 }

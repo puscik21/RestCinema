@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,7 +41,8 @@ public class SpectacleService {
         return repository.save(spectacle);
     }
 
-    public void delete(Long id) {
+    public Map<String, String> deleteById(Long id) {
         repository.deleteById(id);
+        return Map.of("message", String.format("Spectacle with id: %s has been removed", id));
     }
 }
