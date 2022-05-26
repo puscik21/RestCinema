@@ -35,7 +35,7 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public MovieDTO getById(@PathVariable Long id) {
-        return mappingService.map(service.findByIdOrThrow(id));
+        return mappingService.map(service.getById(id));
     }
 
     @PostMapping

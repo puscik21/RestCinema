@@ -36,7 +36,7 @@ public class SeatController {
 
     @GetMapping("/{id}")
     public SeatDTO getById(@PathVariable Long id) {
-        return mappingService.map(service.findByIdOrThrow(id));
+        return mappingService.map(service.getById(id));
     }
 
     @PostMapping

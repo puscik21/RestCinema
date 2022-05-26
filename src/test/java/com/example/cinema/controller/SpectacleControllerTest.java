@@ -90,7 +90,7 @@ class SpectacleControllerTest {
     @Test
     void shouldFindById() throws Exception {
         Spectacle spectacle = mockService.getSpectacle();
-        when(spectacleService.findByIdOrThrow(anyLong())).thenReturn(spectacle);
+        when(spectacleService.getById(anyLong())).thenReturn(spectacle);
         SpectacleDTO spectacleDTO = mappingService.map(spectacle);
         String body = objectMapper.writeValueAsString(spectacleDTO);
         mockMvc.perform(get(SPECTACLES_PATH + "/0")

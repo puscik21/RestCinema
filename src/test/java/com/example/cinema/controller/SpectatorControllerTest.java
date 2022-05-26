@@ -90,7 +90,7 @@ class SpectatorControllerTest {
     @Test
     void shouldFindById() throws Exception {
         Spectator spectator = mockService.getSpectator();
-        when(spectatorService.findByIdOrThrow(anyLong())).thenReturn(spectator);
+        when(spectatorService.getById(anyLong())).thenReturn(spectator);
         SpectatorDTO spectatorDTO = mappingService.map(spectator);
         String body = objectMapper.writeValueAsString(spectatorDTO);
         mockMvc.perform(get(SPECTATORS_PATH + "/0")

@@ -35,7 +35,7 @@ public class SpectatorController {
 
     @GetMapping("/{id}")
     public SpectatorDTO getById(@PathVariable Long id) {
-        return mappingService.map(service.findByIdOrThrow(id));
+        return mappingService.map(service.getById(id));
     }
 
     @PostMapping

@@ -41,7 +41,7 @@ public class MovieServiceTest {
     @Test
     public void movieShouldBeFound() {
         Mockito.when(movieRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getMovie()));
-        Movie fromService = movieService.findByIdOrThrow(anyLong());
+        Movie fromService = movieService.getById(anyLong());
         Movie fromMock = mockService.getMovie();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
@@ -49,7 +49,7 @@ public class MovieServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(movieRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> movieService.findByIdOrThrow(anyLong()));
+        assertThrows(RequestException.class, () -> movieService.getById(anyLong()));
     }
 
     @Test

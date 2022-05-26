@@ -35,7 +35,7 @@ public class SpectacleController {
 
     @GetMapping("/{id}")
     public SpectacleDTO getById(@PathVariable Long id) {
-        return mappingService.map(service.findByIdOrThrow(id));
+        return mappingService.map(service.getById(id));
     }
 
     @PostMapping

@@ -19,14 +19,17 @@ public class AuditoriumService {
     private final AuditoriumRepository repository;
 
     public List<Auditorium> findAll() {
+        log.info("Searching for all auditoriums");
         return repository.findAll();
     }
 
-    public Auditorium findByIdOrThrow(Long id) throws RequestException {
+    public Auditorium getById(Long id) throws RequestException {
+        log.info("Getting auditorium with id: {}", id);
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find auditorium with id: " + id));
     }
 
     public Optional<Auditorium> findById(Long id) throws RequestException {
+        log.info("Searching for auditorium with id: {}", id);
         return repository.findById(id);
     }
 
@@ -36,11 +39,12 @@ public class AuditoriumService {
         }
         auditorium.setId(null);
         auditorium.setSpectacles(Collections.emptyList());
+        log.info("Saving auditorium: {}", auditorium);
         return repository.save(auditorium);
     }
 
     public Map<String, String> deleteById(Long id) {
-        Auditorium auditorium = findByIdOrThrow(id);
+        Auditorium auditorium = getById(id);
         auditorium.getSeats()
                 .forEach(seat -> seat.getReservations()
                         .forEach(reservation -> reservation.setSeat(null)));

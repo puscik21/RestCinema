@@ -50,7 +50,7 @@ public class ReservationServiceTest {
     @Test
     void reservationShouldBeFound() {
         when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getReservation()));
-        Reservation fromService = reservationService.findByIdOrThrow(anyLong());
+        Reservation fromService = reservationService.getById(anyLong());
         Reservation fromMock = mockService.getReservation();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
@@ -58,12 +58,12 @@ public class ReservationServiceTest {
     @Test
     void getNotExistingShouldReturnException() {
         when(reservationRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> reservationService.findByIdOrThrow(anyLong()));
+        assertThrows(RequestException.class, () -> reservationService.getById(anyLong()));
     }
 
     @Test
     public void reservationShouldBeSavedWithBasicConditions() {
-        when(seatService.findByIdOrThrow(anyLong())).thenReturn(mockService.getSeat());
+        when(seatService.getById(anyLong())).thenReturn(mockService.getSeat());
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
         Reservation reservation = reservationService.save(mockService.getReservation());
         assertNull(reservation.getId());
@@ -73,7 +73,7 @@ public class ReservationServiceTest {
     @Test
     void addWithNoExistingSpectacleShouldReturnException() {
         Reservation reservation = mockService.getReservation();
-        when(spectacleService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find spectacle with id:  %s",
+        when(spectacleService.getById(anyLong())).thenThrow(new RequestException(String.format("Could not find spectacle with id:  %s",
                 reservation.getSpectacle().getId())));
         Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Could not find spectacle with id:  %s", reservation.getSpectacle().getId()), e.getMessage());
@@ -82,7 +82,7 @@ public class ReservationServiceTest {
     @Test
     void addWithNoExistingSpectatorShouldReturnException() {
         Reservation reservation = mockService.getReservation();
-        when(spectatorService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find spectator with id:  %s"
+        when(spectatorService.getById(anyLong())).thenThrow(new RequestException(String.format("Could not find spectator with id:  %s"
                 , reservation.getSpectator().getId())));
         Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Could not find spectator with id:  %s", reservation.getSpectator().getId()), e.getMessage());
@@ -91,7 +91,7 @@ public class ReservationServiceTest {
     @Test
     void addWithNoExistingSeatShouldReturnException() {
         Reservation reservation = mockService.getReservation();
-        when(seatService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find seat with id: %s",
+        when(seatService.getById(anyLong())).thenThrow(new RequestException(String.format("Could not find seat with id: %s",
                 reservation.getSeat().getId())));
         Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Could not find seat with id: %s", reservation.getSeat().getId()), e.getMessage());
@@ -102,7 +102,7 @@ public class ReservationServiceTest {
         Reservation reservation = mockService.getReservation();
         Seat seat = mockService.getSeat();
         seat.setReserved(true);
-        when(seatService.findByIdOrThrow(anyLong())).thenReturn(seat);
+        when(seatService.getById(anyLong())).thenReturn(seat);
         Exception e = assertThrows(RequestException.class, () -> reservationService.save(reservation));
         assertEquals(String.format("Seat with number %s is already reserved", reservation.getSeat().getNumber()), e.getMessage());
     }

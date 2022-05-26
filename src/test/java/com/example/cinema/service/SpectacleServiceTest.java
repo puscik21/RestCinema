@@ -41,7 +41,7 @@ public class SpectacleServiceTest {
     @Test
     public void spectacleShouldBeFound() {
         Mockito.when(spectacleRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectacle()));
-        Spectacle fromService = spectacleService.findByIdOrThrow(anyLong());
+        Spectacle fromService = spectacleService.getById(anyLong());
         Spectacle fromMock = mockService.getSpectacle();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
@@ -49,7 +49,7 @@ public class SpectacleServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(spectacleRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> spectacleService.findByIdOrThrow(anyLong()));
+        assertThrows(RequestException.class, () -> spectacleService.getById(anyLong()));
     }
 
     @Test

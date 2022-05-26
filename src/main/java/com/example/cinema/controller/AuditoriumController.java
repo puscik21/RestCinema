@@ -35,7 +35,7 @@ public class AuditoriumController {
 
     @GetMapping("/{id}")
     public AuditoriumDTO getById(@PathVariable Long id) {
-        return mappingService.map(service.findByIdOrThrow(id));
+        return mappingService.map(service.getById(id));
     }
 
     @PostMapping

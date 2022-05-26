@@ -1,6 +1,5 @@
 package com.example.cinema.service;
 
-import com.example.cinema.entity.Seat;
 import com.example.cinema.entity.Spectacle;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectacleRepository;
@@ -26,14 +25,17 @@ public class SpectacleService {
     // TODO: 11.11.2021 add pagination
     // TODO: 11.11.2021 provide only basic info like movie, hour (not the whole auditorium)
     public List<Spectacle> findAll() {
+        log.info("Searching for all spectacles");
         return repository.findAll();
     }
 
-    public Spectacle findByIdOrThrow(Long id) throws RequestException {
+    public Spectacle getById(Long id) throws RequestException {
+        log.info("Getting spectacle with id: {}", id);
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find spectacle with id: " + id));
     }
 
     public Optional<Spectacle> findById(Long id) throws RequestException {
+        log.info("Searching for spectacle with id: {}", id);
         return repository.findById(id);
     }
 
@@ -41,11 +43,12 @@ public class SpectacleService {
         spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // TODO: 4/16/2022 @Valid for date
         spectacle.setId(null);
         spectacle.setReservations(Collections.emptyList());
+        log.info("Saving spectacle: {}", spectacle);
         return repository.save(spectacle);
     }
 
     public Map<String, String> deleteById(Long id) {
-        Spectacle spectacle = findByIdOrThrow(id);
+        Spectacle spectacle = getById(id);
         spectacle.getReservations()
                 .forEach(s -> s.setSpectacle(null));
         log.info("Deleting spectacle with id: {}", id);

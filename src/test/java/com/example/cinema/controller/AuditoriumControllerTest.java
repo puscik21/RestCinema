@@ -90,7 +90,7 @@ public class AuditoriumControllerTest {
     @Test
     void shouldFindById() throws Exception {
         Auditorium auditorium = mockService.getAuditorium();
-        when(auditoriumService.findByIdOrThrow(anyLong())).thenReturn(auditorium);
+        when(auditoriumService.getById(anyLong())).thenReturn(auditorium);
         AuditoriumDTO auditoriumDTO = mappingService.map(auditorium);
         String body = objectMapper.writeValueAsString(auditoriumDTO);
         mockMvc.perform(get(AUDITORIUMS_PATH + "/0")

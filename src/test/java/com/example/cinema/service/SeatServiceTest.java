@@ -45,7 +45,7 @@ class SeatServiceTest {
     @Test
     public void seatShouldBeFound() {
         when(seatRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSeat()));
-        Seat fromService = seatService.findByIdOrThrow(anyLong());
+        Seat fromService = seatService.getById(anyLong());
         Seat fromMock = mockService.getSeat();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
@@ -53,7 +53,7 @@ class SeatServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(seatRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> seatService.findByIdOrThrow(anyLong()));
+        assertThrows(RequestException.class, () -> seatService.getById(anyLong()));
     }
 
     @Test
@@ -68,7 +68,7 @@ class SeatServiceTest {
     @Test
     public void addExistingNumberInAuditoriumShouldReturnException() {
         Seat seat = mockService.getSeat();
-        when(auditoriumService.findByIdOrThrow(anyLong())).thenReturn(mockService.getAuditorium());
+        when(auditoriumService.getById(anyLong())).thenReturn(mockService.getAuditorium());
         when(seatRepository.findByNumber(anyInt())).thenReturn(Optional.of(mockService.getSeat()));
         Exception e = assertThrows(RequestException.class, () -> seatService.save(seat));
         assertEquals(String.format("Seat with number %s already exists in auditorium number %s",
@@ -78,7 +78,7 @@ class SeatServiceTest {
     @Test
     public void addSeatWithoutAuditoriumNumberShouldReturnException() {
         Seat seat = mockService.getSeat();
-        when(auditoriumService.findByIdOrThrow(anyLong())).thenThrow(new RequestException(String.format("Could not find auditorium with id: %s",
+        when(auditoriumService.getById(anyLong())).thenThrow(new RequestException(String.format("Could not find auditorium with id: %s",
                 seat.getAuditorium().getId())));
         Exception e = assertThrows(RequestException.class, () -> seatService.save(seat));
         assertEquals(String.format("Could not find auditorium with id: %s", seat.getAuditorium().getId()), e.getMessage());

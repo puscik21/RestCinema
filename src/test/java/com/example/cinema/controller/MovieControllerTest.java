@@ -90,7 +90,7 @@ class MovieControllerTest {
     @Test
     void shouldFindById() throws Exception {
         Movie movie = mockService.getMovie();
-        when(movieService.findByIdOrThrow(anyLong())).thenReturn(movie);
+        when(movieService.getById(anyLong())).thenReturn(movie);
         MovieDTO movieDTO = mappingService.map(movie);
         String body = objectMapper.writeValueAsString(movieDTO);
         mockMvc.perform(get(MOVIES_PATH + "/0")
