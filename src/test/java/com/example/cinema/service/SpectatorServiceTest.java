@@ -42,7 +42,7 @@ public class SpectatorServiceTest {
     @Test
     public void spectatorShouldBeFound() {
         Mockito.when(spectatorRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getSpectator()));
-        Spectator fromService = spectatorService.findByIdOrThrow(anyLong());
+        Spectator fromService = spectatorService.getById(anyLong());
         Spectator fromMock = mockService.getSpectator();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
@@ -50,7 +50,7 @@ public class SpectatorServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(spectatorRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> spectatorService.findByIdOrThrow(anyLong()));
+        assertThrows(RequestException.class, () -> spectatorService.getById(anyLong()));
     }
 
     @Test

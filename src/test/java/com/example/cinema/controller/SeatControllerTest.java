@@ -90,7 +90,7 @@ class SeatControllerTest {
     @Test
     void shouldFindById() throws Exception {
         Seat seat = mockService.getSeat();
-        when(seatService.findByIdOrThrow(anyLong())).thenReturn(seat);
+        when(seatService.getById(anyLong())).thenReturn(seat);
         SeatDTO seatDTO = mappingService.map(seat);
         String body = objectMapper.writeValueAsString(seatDTO);
         mockMvc.perform(get(SEATS_PATH + "/0")

@@ -42,7 +42,7 @@ public class AuditoriumServiceTest {
     @Test
     public void auditoriumShouldBeFound() {
         Mockito.when(auditoriumRepository.findById(anyLong())).thenReturn(Optional.of(mockService.getAuditorium()));
-        Auditorium fromService = auditoriumService.findByIdOrThrow(anyLong());
+        Auditorium fromService = auditoriumService.getById(anyLong());
         Auditorium fromMock = mockService.getAuditorium();
         assertThat(fromService).usingRecursiveComparison().isEqualTo(fromMock);
     }
@@ -50,7 +50,7 @@ public class AuditoriumServiceTest {
     @Test
     public void getNotExistingShouldReturnException() {
         when(auditoriumRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(RequestException.class, () -> auditoriumService.findByIdOrThrow(anyLong()));
+        assertThrows(RequestException.class, () -> auditoriumService.getById(anyLong()));
     }
 
     @Test

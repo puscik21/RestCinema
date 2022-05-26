@@ -4,14 +4,17 @@ import com.example.cinema.entity.Spectacle;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectacleRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SpectacleService {
@@ -22,14 +25,17 @@ public class SpectacleService {
     // TODO: 11.11.2021 add pagination
     // TODO: 11.11.2021 provide only basic info like movie, hour (not the whole auditorium)
     public List<Spectacle> findAll() {
+        log.info("Searching for all spectacles");
         return repository.findAll();
     }
 
-    public Spectacle findByIdOrThrow(Long id) throws RequestException {
+    public Spectacle getById(Long id) throws RequestException {
+        log.info("Getting spectacle with id: {}", id);
         return repository.findById(id).orElseThrow(() -> new RequestException("Could not find spectacle with id: " + id));
     }
 
     public Optional<Spectacle> findById(Long id) throws RequestException {
+        log.info("Searching for spectacle with id: {}", id);
         return repository.findById(id);
     }
 
@@ -37,10 +43,16 @@ public class SpectacleService {
         spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // TODO: 4/16/2022 @Valid for date
         spectacle.setId(null);
         spectacle.setReservations(Collections.emptyList());
+        log.info("Saving spectacle: {}", spectacle);
         return repository.save(spectacle);
     }
 
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public Map<String, String> deleteById(Long id) {
+        Spectacle spectacle = getById(id);
+        spectacle.getReservations()
+                .forEach(s -> s.setSpectacle(null));
+        log.info("Deleting spectacle with id: {}", id);
+        repository.delete(spectacle);
+        return Map.of("message", String.format("Spectacle with id: %s has been removed", id));
     }
 }

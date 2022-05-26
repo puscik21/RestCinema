@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,7 +36,7 @@ public class SeatController {
 
     @GetMapping("/{id}")
     public SeatDTO getById(@PathVariable Long id) {
-        return mappingService.map(service.findByIdOrThrow(id));
+        return mappingService.map(service.getById(id));
     }
 
     @PostMapping
@@ -52,8 +53,7 @@ public class SeatController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        service.delete(id);
-        return "Seat was deleted";
+    public Map<String, String> deleteById(@PathVariable Long id) {
+        return service.deleteById(id);
     }
 }

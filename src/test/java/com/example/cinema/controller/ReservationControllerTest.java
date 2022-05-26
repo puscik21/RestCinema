@@ -90,7 +90,7 @@ class ReservationControllerTest {
     @Test
     void shouldFindById() throws Exception {
         Reservation reservation = mockService.getReservation();
-        when(reservationService.findByIdOrThrow(anyLong())).thenReturn(reservation);
+        when(reservationService.getById(anyLong())).thenReturn(reservation);
         ReservationDTO reservationDTO = mappingService.map(reservation);
         String body = objectMapper.writeValueAsString(reservationDTO);
         mockMvc.perform(get(RESERVATIONS_PATH + "/0")
