@@ -4,6 +4,7 @@ import com.example.cinema.entity.Auditorium;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.AuditoriumRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuditoriumService {
@@ -38,7 +40,15 @@ public class AuditoriumService {
     }
 
     public Map<String, String> deleteById(Long id) {
+        Auditorium auditorium = findByIdOrThrow(id);
+        auditorium.getSeats()
+                .forEach(s -> s.getReservations()
+                        .forEach(r -> r.setSeat(null)));
+        auditorium.getSpectacles()
+                .forEach(s -> s.setAuditorium(null));
+        log.info("Deleting auditorium with number: {}", auditorium.getNumber());
+        repository.flush();
         repository.deleteById(id);
-        return Map.of("message", String.format("Auditorium with id: %s has been removed", id));
+        return Map.of("message", String.format("Auditorium with number: %s has been removed", auditorium.getNumber()));
     }
 }
