@@ -1,9 +1,11 @@
 package com.example.cinema.service;
 
+import com.example.cinema.entity.Seat;
 import com.example.cinema.entity.Spectacle;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectacleRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SpectacleService {
@@ -42,7 +45,11 @@ public class SpectacleService {
     }
 
     public Map<String, String> deleteById(Long id) {
-        repository.deleteById(id);
+        Spectacle spectacle = findByIdOrThrow(id);
+        spectacle.getReservations()
+                .forEach(s -> s.setSpectacle(null));
+        log.info("Deleting spectacle with id: {}", id);
+        repository.delete(spectacle);
         return Map.of("message", String.format("Spectacle with id: %s has been removed", id));
     }
 }

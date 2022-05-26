@@ -1,16 +1,19 @@
 package com.example.cinema.service;
 
+import com.example.cinema.entity.Movie;
 import com.example.cinema.entity.Reservation;
 import com.example.cinema.entity.Seat;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.ReservationRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ReservationService {
@@ -53,7 +56,9 @@ public class ReservationService {
     }
 
     public Map<String, String> deleteById(Long id) {
-        repository.deleteById(id);
+        Reservation reservation = findByIdOrThrow(id);
+        log.info("Deleting reservation with id: {}", id);
+        repository.delete(reservation);
         return Map.of("message", String.format("Reservation with id: %s has been removed", id));
     }
 }

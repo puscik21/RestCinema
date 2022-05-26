@@ -42,13 +42,12 @@ public class AuditoriumService {
     public Map<String, String> deleteById(Long id) {
         Auditorium auditorium = findByIdOrThrow(id);
         auditorium.getSeats()
-                .forEach(s -> s.getReservations()
-                        .forEach(r -> r.setSeat(null)));
+                .forEach(seat -> seat.getReservations()
+                        .forEach(reservation -> reservation.setSeat(null)));
         auditorium.getSpectacles()
-                .forEach(s -> s.setAuditorium(null));
+                .forEach(spectacle -> spectacle.setAuditorium(null));
         log.info("Deleting auditorium with number: {}", auditorium.getNumber());
-        repository.flush();
-        repository.deleteById(id);
+        repository.delete(auditorium);
         return Map.of("message", String.format("Auditorium with number: %s has been removed", auditorium.getNumber()));
     }
 }

@@ -5,13 +5,20 @@ import com.example.cinema.entity.Seat;
 import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SeatRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.SQLDelete;
+import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PostRemove;
+import javax.persistence.PreRemove;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SeatService {
@@ -52,7 +59,11 @@ public class SeatService {
     }
 
     public Map<String, String> deleteById(Long id) {
-        repository.deleteById(id);
-        return Map.of("message", String.format("Seat with id: %s has been removed", id));
+        Seat seat = findByIdOrThrow(id);
+        seat.getReservations()
+                .forEach(s -> s.setSeat(null));
+        log.info("Deleting seat with number: {}", seat.getNumber());
+        repository.delete(seat);
+        return Map.of("message", String.format("Seat with number: %s has been removed", seat.getNumber()));
     }
 }
