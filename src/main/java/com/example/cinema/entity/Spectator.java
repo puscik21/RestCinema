@@ -24,9 +24,13 @@ public class Spectator {
 
     @OneToMany(mappedBy = "spectator")
     private List<Reservation> reservations;
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String phoneNumber;
 }
