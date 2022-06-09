@@ -12,7 +12,7 @@ insert into seat (id, auditorium_id, number, is_reserved) values (1, 1, 2, true)
 insert into spectacle (id, movie_id, auditorium_id, date_time) values (1, 1, 1, DATEADD(second, DATEDIFF(second, '19700101', NOW()), '19700101'));
 
 -- spectator
--- need to be added by API
+insert into spectator (id, name, email, phone_number, password, roles) values (1, 'Jan Kowalski', 'jankowalski@mail.com', '123456789', 'admin', '');
 
 -- reservation
 insert into reservation (id, seat_id, spectacle_id, spectator_id) values (1, 1, 1, 1);
