@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .formLogin().loginPage("/login").permitAll()
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
+                .and().rememberMe().tokenValiditySeconds(2592000) // 30 days
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/spectators").permitAll()
