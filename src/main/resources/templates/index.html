@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Main Page</title>
 </head>
 <body>
     <h1>Hello there!</h1>
     <h2>this is main page</h2>
+
+    <div>
+        <form form-method="post" th:action="@{/logout}">
+            <button class="btn btn-outline-danger my-2 my-sm-0 btn-sm" type="submit">Logout</button>
+        </form>
+    </div>
 </body>
 </html>
