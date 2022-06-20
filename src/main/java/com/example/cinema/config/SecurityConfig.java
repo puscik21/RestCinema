@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/spectators").permitAll()
                 .anyRequest().authenticated()
+                .and().headers().frameOptions().sameOrigin()    // allows using /h2-console
                 .and().csrf().disable();
     }
 
