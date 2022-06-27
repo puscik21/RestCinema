@@ -1,8 +1,8 @@
-package com.example.cinema.config;
+package com.example.cinema.security;
 
 import com.auth0.jwt.JWT;
 import com.example.cinema.dto.LoginUserDTO;
-import com.example.cinema.entity.UserPrincipal;
+import com.example.cinema.pojo.UserPrincipal;
 import com.example.cinema.exception.RequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,22 +35,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (IOException e) {
             throw new RequestException("Error while retrieving credentials", e);
         }
-
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword(), new ArrayList<>());
-
         return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserPrincipal principal = (UserPrincipal) authResult.getPrincipal();
-
         String token = JWT.create()
                 .withSubject(principal.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .sign(HMAC512(JwtProperties.SECRET.getBytes()));
-
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + token);
     }
 }

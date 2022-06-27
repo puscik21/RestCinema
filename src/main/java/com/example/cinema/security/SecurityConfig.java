@@ -1,4 +1,4 @@
-package com.example.cinema.config;
+package com.example.cinema.security;
 
 import com.example.cinema.repository.SpectatorRepository;
 import com.example.cinema.service.UserPrincipalDetailsService;
@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     private final UserPrincipalDetailsService userPrincipalDetailsService;
     private final SpectatorRepository spectatorRepository;
 

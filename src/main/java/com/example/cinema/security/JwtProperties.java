@@ -1,4 +1,4 @@
-package com.example.cinema.config;
+package com.example.cinema.security;
 
 // TODO: 6/27/2022 take properties from application.properties
 

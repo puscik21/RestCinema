@@ -1,7 +1,7 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.Spectator;
-import com.example.cinema.entity.UserPrincipal;
+import com.example.cinema.pojo.UserPrincipal;
 import com.example.cinema.repository.SpectatorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,7 @@ public class UserPrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Spectator spectator = this.spectatorRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Cannot find spectator with  email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("Could not find spectator with email: " + email));
         return new UserPrincipal(spectator);
     }
 }

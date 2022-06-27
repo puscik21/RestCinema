@@ -1,5 +1,6 @@
-package com.example.cinema.entity;
+package com.example.cinema.pojo;
 
+import com.example.cinema.entity.Spectator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class UserPrincipal implements UserDetails { // TODO: 6/25/2022 not really an entity
+public class UserPrincipal implements UserDetails {
 
     private final Spectator spectator;
 

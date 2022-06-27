@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SeatDTO { // TODO: 5/22/2022 dto interface
+public class SeatDTO {
     private Long id;
 
     @NotNull(message = "Seat auditoriumId cannot be null")

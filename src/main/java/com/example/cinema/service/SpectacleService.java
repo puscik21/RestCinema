@@ -23,7 +23,6 @@ public class SpectacleService {
 
     // TODO: 11.11.2021 make it chronological
     // TODO: 11.11.2021 add pagination
-    // TODO: 11.11.2021 provide only basic info like movie, hour (not the whole auditorium)
     public List<Spectacle> findAll() {
         log.info("Searching for all spectacles");
         return repository.findAll();
@@ -40,7 +39,7 @@ public class SpectacleService {
     }
 
     public Spectacle save(Spectacle spectacle) {
-        spectacle.setDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)); // TODO: 4/16/2022 @Valid for date
+        // TODO: 6/27/2022 check if date is in future
         spectacle.setId(null);
         spectacle.setReservations(Collections.emptyList());
         log.info("Saving spectacle: {}", spectacle);
