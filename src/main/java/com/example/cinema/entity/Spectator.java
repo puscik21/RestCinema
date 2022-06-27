@@ -44,7 +44,7 @@ public class Spectator {
     private String roles = "";
 
     public List<String> getRoles() {
-        if (this.roles.isBlank()) {
+        if (this.roles == null || this.roles.isBlank()) {
             return Collections.emptyList();
         }
         return Arrays.asList(this.roles.split(","));

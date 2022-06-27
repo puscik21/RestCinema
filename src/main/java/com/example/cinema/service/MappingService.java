@@ -155,4 +155,8 @@ public class MappingService {
         }
         return spectator;
     }
+
+    public Spectator map(RegisterUserDTO registerUserDTO) {
+        return mapper.map(registerUserDTO, Spectator.class);
+    }
 }

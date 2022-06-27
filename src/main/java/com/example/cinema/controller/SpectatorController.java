@@ -38,6 +38,7 @@ public class SpectatorController {
         return mappingService.map(service.getById(id));
     }
 
+    // TODO: 6/27/2022 probably to be removed
     @PostMapping
     public SpectatorDTO save(@RequestBody @Valid SpectatorDTO spectatorDTO) {
         Spectator spectator = service.save(mappingService.map(spectatorDTO));

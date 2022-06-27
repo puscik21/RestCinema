@@ -20,7 +20,7 @@ public class InitService implements CommandLineRunner {
         spectator.setEmail("admin@mail.com");
         spectator.setPhoneNumber("123456789");
         spectator.setPassword(passwordEncoder.encode("admin"));
-        spectator.setRoles("ADMIN");
+        spectator.setRoles("ROLE_ADMIN");
         spectatorRepository.save(spectator);
     }
 }
