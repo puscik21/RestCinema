@@ -26,7 +26,7 @@ public class RequestExceptionHandler {
     public ResponseEntity<ExceptionResult> handleRequestException(Exception e) {
         ExceptionResult result = new ExceptionResult(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         log.error("{}, status: {}, stackTrace: ", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, e);
-        return ResponseEntity.badRequest().body(result);
+        return ResponseEntity.internalServerError().body(result);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
