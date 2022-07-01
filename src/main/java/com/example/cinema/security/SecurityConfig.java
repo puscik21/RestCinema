@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserPrincipalDetailsService userPrincipalDetailsService;
     private final SpectatorRepository spectatorRepository;
+    private final JwtProperties jwtProperties;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
@@ -34,8 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 // filters
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), spectatorRepository))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProperties))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), spectatorRepository, jwtProperties))
                 .authorizeRequests()
                 // rules
                 .antMatchers(HttpMethod.POST, "/login").permitAll()

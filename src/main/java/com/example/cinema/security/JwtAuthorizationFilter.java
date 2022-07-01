@@ -20,27 +20,29 @@ import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final SpectatorRepository spectatorRepository;
+    private final JwtProperties jwtProperties;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SpectatorRepository spectatorRepository) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SpectatorRepository spectatorRepository, JwtProperties jwtProperties) {
         super(authenticationManager);
         this.spectatorRepository = spectatorRepository;
+        this.jwtProperties = jwtProperties;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader(JwtProperties.HEADER_STRING);
-        if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        String header = request.getHeader(jwtProperties.getHeaderKey());
+        if (header == null || !header.startsWith(jwtProperties.getTokenPrefix())) {
             chain.doFilter(request, response);
             return;
         }
-        String token = header.replace(JwtProperties.TOKEN_PREFIX, "");
+        String token = header.replace(jwtProperties.getTokenPrefix(), "");
         Authentication auth = getUsernamePasswordAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(auth);
         chain.doFilter(request, response);
     }
 
     private Authentication getUsernamePasswordAuthentication(String token) {
-        String email = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET.getBytes()))
+        String email = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret().getBytes()))
                 .build()
                 .verify(token)
                 .getSubject();

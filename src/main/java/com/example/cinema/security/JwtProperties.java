@@ -1,10 +1,20 @@
 package com.example.cinema.security;
 
-// TODO: 6/27/2022 take properties from application.properties
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
+
+@Getter
+@Setter
+@Configuration("jwtProperties")
+@ConfigurationProperties(prefix = "jwt")
+@PropertySource(name = "jwtProperties", value = "jwtProperties.properties")
 public class JwtProperties {
-    public static final String SECRET = "SomeSecret123";
-    public static final int EXPIRATION_TIME = 864_000_000; // 10 days
-    public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER_STRING = "Authorization";
+    private String secret;
+    private String tokenPrefix;
+    private String headerKey;
+    private int expirationTime;
 }
