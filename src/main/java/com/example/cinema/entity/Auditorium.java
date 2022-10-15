@@ -31,7 +31,7 @@ public class Auditorium {
     @OneToMany(mappedBy = "auditorium")
     private List<Spectacle> spectacles;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private Integer number;
 
     public Auditorium(int number, int numberOfSeats) {

@@ -5,6 +5,7 @@ import com.example.cinema.exception.RequestException;
 import com.example.cinema.repository.SpectatorRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SpectatorService {
     private final SpectatorRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<Spectator> findAll() {
         log.info("Searching for all spectators");
@@ -39,6 +41,7 @@ public class SpectatorService {
         }
         spectator.setId(null);
         spectator.setReservations(Collections.emptyList());
+        spectator.setPassword(passwordEncoder.encode(spectator.getPassword()));
         log.info("Saving spectator: {}", spectator);
         return repository.save(spectator);
     }

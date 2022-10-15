@@ -3,6 +3,7 @@ package com.example.cinema.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +22,8 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie")
     private List<Spectacle> spectacles;
+
+    @Column(nullable = false)
     private String name;
 }
 

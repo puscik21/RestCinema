@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface SpectatorRepository extends JpaRepository<Spectator, Long> {
+
     @Query(value = "SELECT s from Spectator s where s.email = :email")
     Optional<Spectator> findByEmail(@Param("email") String email);
 }

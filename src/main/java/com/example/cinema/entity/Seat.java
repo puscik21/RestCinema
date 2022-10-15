@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,6 +29,10 @@ public class Seat {
 
     @OneToMany(mappedBy = "seat", cascade = {CascadeType.MERGE})
     private List<Reservation> reservations;
+
+    @Column(nullable = false)
     private int number;
+
+    @Column(nullable = false)
     private boolean isReserved = false;
 }
